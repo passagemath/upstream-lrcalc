@@ -23,3 +23,6 @@ CHANGE LOG
         long long to make it possible to compute LR coefficients
         greater than 2^32.  (Thanks to Anatol Kirillov for the bug
         report.)
+
+1.1.3:  Changed the quantum(rows,cols) function so it works with Maple 7.
+

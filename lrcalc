@@ -202,7 +202,7 @@ quantum := proc(rows, cols)
   if rows <= 0 or cols <= 0 then
     QUANTUM_OPTS := ``;
   else
-    QUANTUM_OPTS := ` -q`.rows.`,`.cols;
+    QUANTUM_OPTS := cat(` -q`, rows, `,`, cols);
   fi;
   readlib(forget);
   forget(_call_smult);
