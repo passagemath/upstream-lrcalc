@@ -16,50 +16,54 @@ extern char *optarg;
 
 int rim_hook(vector *lambda, int rows, int cols, int *qp)
 {
-  int i, j, lam0, lami, len, sign, q, n, dif;
+  int i, j, len, sign, q, n;
   
   len = v_length(lambda);
-  sign = 1;
-  q = 0;
   n = rows + cols;
-  
-  while (len > 0 && v_elem(lambda, 0) > cols)
+
+  q = 0;
+  for (i = 0; i < len; i++)
     {
-      lam0 = v_elem(lambda, 0);
-      i = len;
-      lami = 0;
-      while (i > 0 && lam0 - lami + i > n)
-	lami = v_elem(lambda, --i);
-      
-      if (i == len)
+      int a = v_elem(lambda, i) + rows - i - 1;
+      q += a / n;
+      a %= n;
+      v_elem(lambda, i) = a - rows + 1;
+    }
+
+  /* bubble sort :-( */
+  sign = (rows & 1) ? 0 : q;
+  for (i = 1; i < len; i++)
+    {
+      int a = v_elem(lambda, i);
+      for (j = i; j > 0 && a > v_elem(lambda, j-1); j--)
+	{
+	  v_elem(lambda, j) = v_elem(lambda, j-1);
+	}
+      if (j > 0 && a == v_elem(lambda, j-1))
 	return 0;
-      
-      dif = n - lam0 + lami - i;
-      if (dif == 0)
-	return 0;
-      
-      for (j = 0; j < i; j++)
-	v_elem(lambda, j) = v_elem(lambda, j + 1) - 1;
-      
-      v_elem(lambda, i) -= dif;
-      
-      while (len > 0 && v_elem(lambda, len - 1) == 0)
-	len--;
-      
-      if (((rows + i + 1) & 1) != 0)
-	sign = -sign;
-      q++;
+      v_elem(lambda, j) = a;
+      sign += i - j;
     }
   
+  for (i = 0; i < len; i++)
+    {
+      v_elem(lambda, i) += i;
+      if (v_elem(lambda, i) < 0)
+	return 0;
+    }
+  
+  while (len > 0 && v_elem(lambda, len - 1) == 0)
+    len--;
   v_length(lambda) = len;
   *qp = q;
-  return sign;
+  return (sign & 1) ? -1 : 1;
 }
 
 
 void print_usage()
 {
-  fprintf(stderr, "Usage: mult [-m] [-r rows] [-q rows,cols] part1 - part2\n");
+  fprintf(stderr,
+	  "Usage: mult [-m] [-r rows] [-q rows,cols] part1 - part2\n");
   exit(1);
 }
 
@@ -68,7 +72,7 @@ int main(int ac, char **av)
 {
   hashtab *s;
   vector *sh1, *sh2;
-  int c;
+  int c, wt1, wt2;
   int opt_maple = 0;
   int opt_rows = 0;
   int opt_cols = 0;
@@ -115,7 +119,9 @@ int main(int ac, char **av)
       hash_itr itr;
       
       n = opt_cols + opt_rows;
-      maxq = (v_sum(sh1) + v_sum(sh2)) / n;
+      wt1 = v_sum(sh1);
+      wt2 = v_sum(sh2);
+      maxq = (wt1 + wt2) / n;
       qlist = l_newsz(maxq + 1);
       for (i = 0; i <= maxq; i++)
 	l_append(qlist, hash_new((cmp_t) v_cmp, (hash_t) v_hash));
@@ -146,10 +152,21 @@ int main(int ac, char **av)
 	  sprintf(symbol, "q^%d*s", i);
 	  
 	  tab = l_elem(qlist, i);
-	  if (opt_maple)
-	    maple_print_lincomb(tab, symbol, 0);
-	  else
-	    print_vec_lincomb(tab);
+	  if (! opt_maple)
+	    {
+	      print_vec_lincomb(tab);
+	    }
+	  else if (wt1 + wt2 != n * i)
+	    {
+	      maple_print_lincomb(tab, symbol, 0);
+	    }
+	  else if (hash_card(tab) > 0)
+	    {
+	      hash_itr itr;
+	      hash_first(tab, itr);
+	      c = hash_intvalue(itr);
+	      printf("%+d*q^%d", c, i);
+	    }
 	  free_vec_lincomb(tab);
 	}
       

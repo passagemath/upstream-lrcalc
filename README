@@ -4,6 +4,9 @@ Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
 
 INSTALLATION
 
+This file explains how to install and use the programs.  See the file
+CHANGELOG for a list of bug-fixes and enhancements.
+
 To compile the programs, simply type "./configure" at your shell
 prompt in the this directory.
 
