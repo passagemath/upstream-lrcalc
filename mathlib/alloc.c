@@ -49,7 +49,8 @@ void *arealloc(void *p, int size)
   return p;
 }
 
-#else  DEBUG_MEMORY
+#else
+/*  not DEBUG_MEMORY  */
 
 int memory_used = 0;
 
@@ -188,4 +189,5 @@ void mem_report()
   fprintf(stderr, "Memory balance: %d\n", memory_used);
 }
 
-#endif DEBUG_MEMORY
+#endif
+/* DEBUG_MEMORY */

@@ -36,4 +36,4 @@ void l_appendlist(list * lst1, list * lst2);
 void l_copy(list * lst1, list * lst2);
 list *l_new_copy(list * lst);
 
-#endif _LIST_H
+#endif

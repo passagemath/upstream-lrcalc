@@ -19,3 +19,7 @@ CHANGE LOG
 1.1.1:  Fixed a bug in the communication between the maple interface
 	and mult.c.
 
+1.1.2:  Changed the return type of the internal function lrcoef() to
+        long long to make it possible to compute LR coefficients
+        greater than 2^32.  (Thanks to Anatol Kirillov for the bug
+        report.)

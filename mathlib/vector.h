@@ -77,4 +77,4 @@ void free_vec_list(list *lst);
 
 list *find_extreme_vectors(list *veclist, int take_max);
 
-#endif _VECTOR_H
+#endif

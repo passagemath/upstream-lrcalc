@@ -12,7 +12,7 @@ int part_length(vector *p);
 vector *part_conjugate(vector *p);
 int part_subset(vector *p1, vector *p2);
 
-int lrcoef(vector *outer, vector *inner1, vector *inner2);
+long long lrcoef(vector *outer, vector *inner1, vector *inner2);
 
 hashtab *skew(vector *outer, vector *inner, int maxrows);
 hashtab *mult(vector *sh1, vector *sh2, int maxrows);

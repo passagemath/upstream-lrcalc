@@ -182,12 +182,13 @@ void _chop_rows(vector *in1, vector *out)
 }
 
 
-int lrcoef(vector *outer, vector *inner1, vector *inner2)
+long long lrcoef(vector *outer, vector *inner1, vector *inner2)
 {
   vector *out, *in1, *in2, *out_conj, *cont, *vtmp;
   int w_out, w_in1, w_in2, do_swap;
-  int rows, cols, i, j, stack_sz, sp, x, res;
+  int rows, cols, i, j, stack_sz, sp, x;
   int *skewtab, *itab, *jtab, *max_tab;
+  long long res;
   
   out = v_new_copy(outer);
   in1 = v_new_copy(inner1);

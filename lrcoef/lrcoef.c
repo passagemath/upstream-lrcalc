@@ -32,7 +32,7 @@ int main(int ac, char **av)
   if (mu == NULL)
     print_usage();
   
-  printf("%d\n", lrcoef(nu, lm, mu));
+  printf("%lld\n", lrcoef(nu, lm, mu));
   
   v_free(lm);
   v_free(mu);
@@ -40,5 +40,5 @@ int main(int ac, char **av)
   
   memory_report;
   
-  exit(0);
+  return 0;
 }

@@ -87,5 +87,4 @@ void *_s_first(set *s, set_itr *itr);
 void *_s_next(set_itr *itr);
 
 
-#endif _SET_H
-
+#endif
