@@ -237,7 +237,7 @@ int lrcoef(vector *outer, vector *inner1, vector *inner2)
       return 0;
     }
   
-  if (w_in1 == 0 || w_in2 == 0)
+  if (w_in1 <= 1 || w_in2 <= 1)
     {
       v_free(in1);
       v_free(in2);
@@ -327,8 +327,11 @@ int lrcoef(vector *outer, vector *inner1, vector *inner2)
   v_elem(cont, 0) = 1;
   
   sp = 1;
-  max_tab[1] = (itab[1] == itab[0]) ? 0 : 1;
-  x = 0;
+  i = itab[1];
+  j = jtab[1];
+  max_tab[1] = (i == itab[0]) ? 0 : 
+    v_length(in2) + i - v_elem(out_conj, j);;
+  x = (j == jtab[0]) ? 1 : 0;
   
   while (sp > 0)
     {
@@ -336,7 +339,7 @@ int lrcoef(vector *outer, vector *inner1, vector *inner2)
        *
        *   a) incr x
        *
-       *   b) put x; incr sp; set x;
+       *   b) put x; incr sp; get x;
        *
        *   c) decr sp; get x; incr x;
        *
@@ -387,7 +390,7 @@ int lrcoef(vector *outer, vector *inner1, vector *inner2)
       if (j < v_elem(out, i) - 1)
 	max_tab[sp] = skewtab[sp - 1];
       else
-	max_tab[sp] = v_length(in2) - 1; /* + i - v_elem(out_conj, j);*/
+	max_tab[sp] = v_length(in2) + i - v_elem(out_conj, j);
       
       x = 0;
       if (i > 0 && j >= v_elem(in1, i-1))
