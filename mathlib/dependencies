@@ -1,0 +1,6 @@
+alloc.o: alloc.c alloc.h
+hashtab.o: hashtab.c hashtab.h list.h alloc.h vector.h set.h
+list.o: list.c list.h alloc.h claim.h
+set.o: set.c set.h list.h alloc.h vector.h hashtab.h
+vectarg.o: vectarg.c vectarg.h vector.h set.h list.h alloc.h hashtab.h
+vector.o: vector.c vector.h set.h list.h alloc.h hashtab.h

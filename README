@@ -1,0 +1,161 @@
+Littlewood-Richardson Calculator
+Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+
+
+INSTALLATION
+
+To compile the programs, simply type "./configure" at your shell
+prompt in the this directory.
+
+% ./configure
+
+This will compile the C programs and install them in a subdirectory
+called bin under this directory.  The program ./configure assumes that
+you have a standard unix-type operating system with gcc and GNU make
+installed.  (If your system is different, you may have to edit the 
+makefiles in the mathlib and lrcoef directories.)
+
+After successful installation, you will have the following programs in
+the bin directory under the current directory:
+
+    lrcoef, skew, mult, coprod
+
+To use the programs, include the bin directory in your path.  This is
+done with the command (for csh/tcsh users):
+
+% set path = ( $path `pwd`/bin )
+
+(Note that the above line only works if you are in the lrcalc
+directory.  You might prefer to edit your .cshrc file to set the path
+automatically when you login to your computer.  Just add the above
+"set path" command to the end of your .cshrc, but replace `pwd` with
+the full path of the lrcalc directory.)
+
+A very brief description of the programs is as follows:
+
+
+lrcoef:  Compute a single Littlewood-Richardson coefficient.
+------
+
+The command "lrcoef z - x - y" computes the Littlewood-Richardson
+coefficient c^z_{x,y} which is the coefficient of the Schur function
+s_z in the product s_x * s_y.
+
+Example:
+
+% lrcoef 3 2 1 - 2 1 - 2 1
+2
+
+
+skew:  Expand a skew Schur function in the basis of Schur functions.
+----
+
+The command "skew z / x" lists all partitions y for which the
+Littlewood-Richardson coefficient c^z_{x,y} is non-zero, with that
+coefficient in front.
+
+Example:
+
+% skew 3 2 1 / 2 1
+1  (3)
+2  (2, 1)
+1  (1, 1, 1)
+
+
+mult:  Expand a product of two Schur functions in the basis of Schur
+----   functions.
+
+The command "mult x - y" lists all partitions z for which the
+Littlewood-Richardson coefficient c^z_{x,y} is non-zero, with that
+coefficient in front.
+
+Example:
+
+% mult 2 1 - 2 1
+1  (3, 3)
+1  (4, 2)
+1  (2, 2, 1, 1)
+1  (2, 2, 2)
+2  (3, 2, 1)
+1  (4, 1, 1)
+1  (3, 1, 1, 1)
+
+
+coprod:  Calculate coproducts in the ring of symmetric functions.
+------
+
+The command "coprod z" lists all pairs of partitions x and y for which
+the Littlewood-Richardson coefficient c^z_{x,y} is non-zero, with that
+coefficient in front.
+
+Example:
+
+% coprod 3 2 1
+
+1  (3, 1)  (2)
+1  (2, 2)  (1, 1)
+1  (3, 1)  (1, 1)
+1  (2, 1)  (3)
+2  (2, 1)  (2, 1)
+1  (2, 2, 1)  (1)
+1  (3, 2, 1)  ()
+1  (3, 2)  (1)
+1  (2, 1, 1)  (2)
+1  (3, 1, 1)  (1)
+1  (1, 1, 1)  (2, 1)
+1  (2, 1, 1)  (1, 1)
+1  (2, 2)  (2)
+
+
+
+MAPLE INTERFACE
+
+The file lrcalc in this directory provides an interface between the
+above C programs and Maple.  It allows you to combine the notational
+convenience of Maple with the speed of C programs.
+
+To use the interface, simply type "read lrcalc;" after starting Maple.
+You can move the file lrcalc to your directory with personal Maple
+files if you prefer.  Note, however, that if you move the compiled C
+programs in the bin subdirectory to somewhere else, then you will need
+to change the last line of lrcalc accordingly.
+
+The notation used by the Maple interface is the same as in John
+Stembridge's "SF" Maple package for computing with symmetric
+functions.  I hope this will make it easier to use SF with the Maple
+interface.
+
+The Maple interface defines three Maple functions:
+
+    tos, skew, lrcoef
+
+The following Maple session gives an example of how to use them:
+
+
+% maple
+    |\^/|     Maple V Release 4 (WMI Campus Wide License)
+._|\|   |/|_. Copyright (c) 1981-1996 by Waterloo Maple Inc. All rights
+ \  MAPLE  /  reserved. Maple and Maple V are registered trademarks of
+ <____ ____>  Waterloo Maple Inc.
+      |       Type ? for help.
+> read lrcalc;
+> lrcoef([3,2,1], [2,1], [2,1]);
+                                       2
+
+> skew(s[3,2,1], s[2,1]);
+                         s[3] + 2 s[2, 1] + s[1, 1, 1]
+
+> tos(s[2,1] * s[2,1]);
+s[3, 3] + s[4, 2] + s[2, 2, 1, 1] + s[2, 2, 2] + 2 s[3, 2, 1] + s[4, 1, 1]
+
+     + s[3, 1, 1, 1]
+
+> lrcoef( s[12,11,10,9,8,7,6,5,4,3,2,1],\
+>  s[8,7,6,5,4,3,2,1], s[8,7,6,6,5,4,3,2,1]);
+                                    7869992
+
+
+
+Enjoy!
+
+Anders Skovsted Buch  (Nov 15, 1999)

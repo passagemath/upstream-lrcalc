@@ -1,0 +1,8 @@
+coprod.o: coprod.c symfcn.h
+lrcoef.o: lrcoef.c symfcn.h maple.h
+lrskew.o: lrskew.c symfcn.h
+maple.o: maple.c maple.h
+mult.o: mult.c symfcn.h maple.h
+sat.o: sat.c symfcn.h
+skew.o: skew.c symfcn.h maple.h
+symfcn.o: symfcn.c symfcn.h
