@@ -50,7 +50,7 @@ int main(int ac, char **av)
   
   s = skew(outer, inner, opt_rows);
   if (opt_maple)
-    maple_print_lincomb(s, "s");
+    maple_print_lincomb(s, "s", 1);
   else
     print_vec_lincomb(s);
   

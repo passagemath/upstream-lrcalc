@@ -1,0 +1,17 @@
+Littlewood-Richardson Calculator
+Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+
+
+CHANGE LOG
+
+1.0:    First version released.
+
+1.0.1:  Fixed error which made the program lrcoef produce false results
+        in certain cases.  (Bug reported by Alexander Yong.)
+
+1.1:    Added a "-q rows,cols" option to mult which makes it possible
+	to do computations in the quantum cohomology ring of Gr(d,n)
+	where d=rows and n=rows+cols.
+	The maple interface has new function "quantum(rows,cols)" which
+	causes tos to calculate in this ring as well.
+

@@ -193,11 +193,30 @@ _mults2 := proc(expr)
 end:
 
 
+# quantum(rows, cols) and QUANTUM_OPTS are for doing calculations in 
+# the quantum cohomology ring of Gr(d,n) where d=rows and n=rows+cols, 
+# rather than the ring of symmetric functions.
+
+quantum := proc(rows, cols)
+  global QUANTUM_OPTS;
+  if rows <= 0 or cols <= 0 then
+    QUANTUM_OPTS := ``;
+  else
+    QUANTUM_OPTS := ` -q`.rows.`,`.cols;
+  fi;
+  readlib(forget);
+  forget(_call_smult);
+  0$0;
+end:
+
+QUANTUM_OPTS := ``:
+
 _call_smult := proc(fac1, fac2)
   option remember;
   local cmd, fd, res, i;
+  global QUANTUM_OPTS;
 
-  cmd := cat(LRCALC_BIN_PATH, `/mult -m`, 
+  cmd := cat(LRCALC_BIN_PATH, `/mult -m`, QUANTUM_OPTS,
              seq(cat(` `, op(i,fac1)), i=1..nops(fac1)), ` -`, 
              seq(cat(` `, op(i,fac2)), i=1..nops(fac2)));
 

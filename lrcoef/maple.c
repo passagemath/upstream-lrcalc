@@ -54,7 +54,7 @@ int maple_print_term(int c, vector *v, char *letter)
 #endif
 }
 
-void maple_print_lincomb(hashtab *ht, char *letter)
+void maple_print_lincomb(hashtab *ht, char *letter, int nl)
 {
   hash_itr itr;
   int column;
@@ -77,6 +77,7 @@ void maple_print_lincomb(hashtab *ht, char *letter)
 #ifdef MULTILINE
   printf(");\n");
 #else
-  putchar('\n');
+  if (nl)
+    putchar('\n');
 #endif
 }
