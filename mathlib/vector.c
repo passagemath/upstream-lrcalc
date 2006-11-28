@@ -205,11 +205,13 @@ void free_vec_set(set *s)
   s_free(s);
 }
 
-void print_vec_lincomb(hashtab *ht)
+void print_vec_lincomb(hashtab *ht, int opt_zero)
 {
   hash_itr itr;
   for (hash_first(ht, itr); hash_good(itr); hash_next(itr))
     {
+      if (hash_intvalue(itr) == 0 && opt_zero == 0)
+	continue;
       printf("%d  ", hash_intvalue(itr));
       v_printnl(hash_key(itr));
     }

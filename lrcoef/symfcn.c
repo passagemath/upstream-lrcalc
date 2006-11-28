@@ -673,7 +673,7 @@ hashtab *schur_lc_mult(hashtab *lc1, hashtab *lc2, int maxrows)
 	  
 	  vecpair *vp = vp_new_unordered(v_new_copy(v1), v_new_copy(v2));
 	  void **valp = hash_mkfind(pairs, vp);
-	  ((int) *valp) += c1 * c2;
+	  *((int *) valp) += c1 * c2;
 	  if (! hash_key_used)
 	    vp_free(vp);
 	}
@@ -742,3 +742,132 @@ hashtab *coprod(vector *part, int all)
   
   return res;
 }
+
+
+int rim_hook(vector *lambda, int rows, int cols, int *qp)
+{
+  int i, j, len, sign, q, n;
+  
+  len = v_length(lambda);
+  n = rows + cols;
+
+  q = 0;
+  for (i = 0; i < len; i++)
+    {
+      int a = v_elem(lambda, i) + rows - i - 1;
+      q += a / n;
+      a %= n;
+      v_elem(lambda, i) = a - rows + 1;
+    }
+
+  /* bubble sort :-( */
+  sign = (rows & 1) ? 0 : q;
+  for (i = 1; i < len; i++)
+    {
+      int a = v_elem(lambda, i);
+      for (j = i; j > 0 && a > v_elem(lambda, j-1); j--)
+	{
+	  v_elem(lambda, j) = v_elem(lambda, j-1);
+	}
+      if (j > 0 && a == v_elem(lambda, j-1))
+	return 0;
+      v_elem(lambda, j) = a;
+      sign += i - j;
+    }
+  
+  for (i = 0; i < len; i++)
+    {
+      v_elem(lambda, i) += i;
+      if (v_elem(lambda, i) < 0)
+	return 0;
+    }
+  
+  while (len > 0 && v_elem(lambda, len - 1) == 0)
+    len--;
+  v_length(lambda) = len;
+  *qp = q;
+  return (sign & 1) ? -1 : 1;
+}
+
+list *_quantum_reduce(hashtab* s, int rows, int cols)
+{
+  int sign, q, *valuep;
+  list *qlist;
+  hash_itr itr;
+  
+  qlist = l_newsz(10);
+  
+  for (hash_first(s, itr); hash_good(itr); hash_next(itr))
+    {
+      vector *lambda = hash_key(itr);
+      int coef = hash_intvalue(itr);
+      hashtab *tab;
+      
+      sign = rim_hook(lambda, rows, cols, &q);
+      
+      if (sign == 0)
+	{
+	  v_free(lambda);
+	  continue;
+	}
+      
+      while (q >= l_length(qlist))
+	l_append(qlist, hash_new((cmp_t) v_cmp, (hash_t) v_hash));
+      
+      tab = l_elem(qlist, q);
+      valuep = hash_mkfindint(tab, lambda);
+      *valuep += sign * coef;
+      if (! hash_key_used)
+	v_free(lambda);
+    }
+  
+  return qlist;
+}
+
+list *quantum_reduce(hashtab* s, int rows, int cols)
+{
+  list *qlist = _quantum_reduce(s, rows, cols);
+  hash_free(s);
+  return qlist;
+}
+
+void fusion_reduce(hashtab *lc, int rows, int cols, int opt_zero)
+{
+  int i, j, k, n, lamj;
+  list *qlist = _quantum_reduce(lc, rows, cols);
+  if (l_length(qlist) == 0)
+    {
+      hash_reset(lc);
+      return;
+    }
+  hash_copy(lc, l_elem(qlist, 0));
+  hash_free(l_elem(qlist, 0));
+  n = rows + cols;
+  for (i = 1; i < l_length(qlist); i++)
+    {
+      hashtab *tab = l_elem(qlist, i);
+      hash_itr itr;
+      
+      for (hash_first(tab, itr); hash_good(itr); hash_next(itr))
+	{
+	  vector *lambda = hash_key(itr);
+	  vector *mu;
+	  
+	  if (hash_intvalue(itr) == 0 && opt_zero == 0)
+	    continue;
+	  
+	  mu = v_new(rows);
+	  for (j = 0; j < rows; j++)
+	    {
+	      lamj = (j < v_length(lambda)) ? v_elem(lambda,j) : 0;
+	      k = (j + i) % rows;
+              v_elem(mu,k) = lamj + ((i+j) / rows) * cols + i;
+	    }
+	  hash_insertint(lc, mu, hash_intvalue(itr));
+	}
+      
+      free_vec_lincomb(tab);
+    }
+  l_free(qlist);
+}
+

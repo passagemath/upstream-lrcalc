@@ -65,7 +65,10 @@ void maple_print_lincomb(hashtab *ht, char *letter, int nl)
   column = 1;
   for (hash_first(ht, itr); hash_good(itr); hash_next(itr))
     {
-      column += maple_print_term(hash_intvalue(itr), hash_key(itr), letter);
+      if (hash_intvalue(itr) == 0)
+	continue;
+      
+      column += maple_print_term(hash_intvalue(itr), hash_key(itr),letter);
 #ifdef MULTILINE
       if (column >= OUTPUT_WIDTH)
 	{

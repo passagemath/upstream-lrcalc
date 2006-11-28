@@ -46,6 +46,23 @@ void hash_reset(hashtab *s)
   s->free_elts = 0;
 }
 
+void hash_makeroom(hashtab *s, size_t sz);
+
+void hash_copy(hashtab *dst, hashtab *src)
+{
+  hash_itr itr;
+  hash_reset(dst);
+  hash_makeroom(dst, hash_card(src));
+  for (hash_first(src, itr); hash_good(itr); hash_next(itr))
+    {
+      void *key = hash_key(itr);
+      void *val = hash_value(itr);
+      hashkey_t k = itr.s->elts[itr.i].hkey;
+      void **valp = _hash_mkfind_k(dst, key, k);
+      *valp = val;
+    }
+}
+
 
 size_t hash_find(hashtab *s, void *e, hashkey_t k)
 {
@@ -301,7 +318,7 @@ void lincomb_add_multiple(hashtab *dst, int c, hashtab *lc,
       hashkey_t k = itr.s->elts[itr.i].hkey;
       
       void **valp = _hash_mkfind_k(dst, key, k);
-      int newcoef = (((int) (*valp)) += c * value);
+      int newcoef = (*((int *) valp) += c * value);
       int hku = hash_key_used;
       
       if (newcoef == 0)
@@ -327,3 +344,4 @@ void lincomb_add_multiple(hashtab *dst, int c, hashtab *lc,
 	}
     }
 }
+

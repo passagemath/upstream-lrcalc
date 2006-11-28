@@ -20,6 +20,9 @@ hashtab *coprod(vector *part, int all);
 
 hashtab *schur_lc_mult(hashtab *lc1, hashtab *lc2, int maxrows);
 
+list *quantum_reduce(hashtab* s, int rows, int cols);
+void fusion_reduce(hashtab *lc, int rows, int cols, int opt_zero);
+
 
 typedef struct {
   vector *outer;

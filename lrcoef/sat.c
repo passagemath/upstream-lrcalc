@@ -81,7 +81,7 @@ int check_pair(vector *Npart, vector *Nspart)
 	  
 	  if (opt_verbose)
 	    {
-	      print_vec_lincomb(skewlist[i]);
+	      print_vec_lincomb(skewlist[i], 0);
 	      putchar('\n');
 	    }
 	}

@@ -52,7 +52,7 @@ int main(int ac, char **av)
   if (opt_maple)
     maple_print_lincomb(s, "s", 1);
   else
-    print_vec_lincomb(s);
+    print_vec_lincomb(s, 0);
   
 #if 0
   hash_print_stat(s, 10);

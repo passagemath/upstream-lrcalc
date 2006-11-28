@@ -14,56 +14,10 @@ extern char *optarg;
 #include "maple.h"
 
 
-int rim_hook(vector *lambda, int rows, int cols, int *qp)
-{
-  int i, j, len, sign, q, n;
-  
-  len = v_length(lambda);
-  n = rows + cols;
-
-  q = 0;
-  for (i = 0; i < len; i++)
-    {
-      int a = v_elem(lambda, i) + rows - i - 1;
-      q += a / n;
-      a %= n;
-      v_elem(lambda, i) = a - rows + 1;
-    }
-
-  /* bubble sort :-( */
-  sign = (rows & 1) ? 0 : q;
-  for (i = 1; i < len; i++)
-    {
-      int a = v_elem(lambda, i);
-      for (j = i; j > 0 && a > v_elem(lambda, j-1); j--)
-	{
-	  v_elem(lambda, j) = v_elem(lambda, j-1);
-	}
-      if (j > 0 && a == v_elem(lambda, j-1))
-	return 0;
-      v_elem(lambda, j) = a;
-      sign += i - j;
-    }
-  
-  for (i = 0; i < len; i++)
-    {
-      v_elem(lambda, i) += i;
-      if (v_elem(lambda, i) < 0)
-	return 0;
-    }
-  
-  while (len > 0 && v_elem(lambda, len - 1) == 0)
-    len--;
-  v_length(lambda) = len;
-  *qp = q;
-  return (sign & 1) ? -1 : 1;
-}
-
-
 void print_usage()
 {
   fprintf(stderr,
-	  "Usage: mult [-m] [-r rows] [-q rows,cols] part1 - part2\n");
+"Usage: mult [-mz] [-r rows] [-q rows,cols] [-f rows,level] part1 - part2\n");
   exit(1);
 }
 
@@ -74,16 +28,21 @@ int main(int ac, char **av)
   vector *sh1, *sh2;
   int c, wt1, wt2;
   int opt_maple = 0;
+  int opt_zero = 0;
   int opt_rows = 0;
   int opt_cols = 0;
   int opt_quantum = 0;
+  int opt_fusion = 0;
   char *p;
   
-  while ((c = getopt(ac, av, "mr:q:")) != EOF)
+  while ((c = getopt(ac, av, "mzr:q:f:")) != EOF)
     switch (c)
       {
       case 'm':
 	opt_maple = 1;
+	break;
+      case 'z':
+	opt_zero = 1;
 	break;
       case 'r':
 	opt_rows = atoi(optarg);
@@ -91,7 +50,11 @@ int main(int ac, char **av)
 	  print_usage();
 	break;
       case 'q':
-	opt_quantum = 1;
+      case 'f':
+	if (c == 'q')
+	  opt_quantum = 1;
+	else
+	  opt_fusion = 1;
 	opt_rows = strtol(optarg, &p, 10);
 	if (p == NULL || *p != ',')
 	  print_usage();
@@ -105,56 +68,33 @@ int main(int ac, char **av)
   
   sh1 = get_vect_arg(ac, av);
   sh2 = get_vect_arg(ac, av);
-  
+
   if (sh1 == NULL || sh2 == NULL)
     print_usage();
+
+  wt1 = v_sum(sh1);
+  wt2 = v_sum(sh2);
   
   s = mult(sh1, sh2, opt_rows);
   
+  if (opt_maple)
+    printf("0");
+  
   if (opt_quantum)
     {
-      int n, maxq, i, sign, q, *valuep;
-      list *qlist;
-      hashtab *tab;
-      hash_itr itr;
+      int n = opt_rows + opt_cols;
+      list *qlist = quantum_reduce(s, opt_rows, opt_cols);  
+      int i;
       
-      n = opt_cols + opt_rows;
-      wt1 = v_sum(sh1);
-      wt2 = v_sum(sh2);
-      maxq = (wt1 + wt2) / n;
-      qlist = l_newsz(maxq + 1);
-      for (i = 0; i <= maxq; i++)
-	l_append(qlist, hash_new((cmp_t) v_cmp, (hash_t) v_hash));
-      
-      for (hash_first(s, itr); hash_good(itr); hash_next(itr))
+      for (i = 0; i < l_length(qlist); i++)
 	{
-	  vector *lambda = hash_key(itr);
-	  int coef = hash_intvalue(itr);
-	  
-	  sign = rim_hook(lambda, opt_rows, opt_cols, &q);
-	  
-	  if (sign == 0)
-	    {
-	      v_free(lambda);
-	      continue;
-	    }
-	  
-	  tab = l_elem(qlist, q);
-	  valuep = hash_mkfindint(tab, lambda);
-	  *valuep += sign * coef;
-	  if (! hash_key_used)
-	    v_free(lambda);
-	}
-      
-      for (i = 0; i <= maxq; i++)
-	{
+	  hashtab *tab = l_elem(qlist, i);
 	  char symbol[15];
 	  sprintf(symbol, "q^%d*s", i);
 	  
-	  tab = l_elem(qlist, i);
 	  if (! opt_maple)
 	    {
-	      print_vec_lincomb(tab);
+	      print_vec_lincomb(tab, opt_zero);
 	    }
 	  else if (wt1 + wt2 != n * i)
 	    {
@@ -164,30 +104,28 @@ int main(int ac, char **av)
 	    {
 	      hash_itr itr;
 	      hash_first(tab, itr);
-	      c = hash_intvalue(itr);
-	      printf("%+d*q^%d", c, i);
+	      if (hash_intvalue(itr) != 0 || opt_zero)
+		printf("%+d*q^%d", hash_intvalue(itr), i);
 	    }
 	  free_vec_lincomb(tab);
 	}
       
-      hash_free(s);
       l_free(qlist);
       if (opt_maple)
 	putchar('\n');
     }
   else
     {
+      if (opt_fusion)
+	fusion_reduce(s, opt_rows, opt_cols, opt_zero);
+      
       if (opt_maple)
 	maple_print_lincomb(s, "s", 1);
       else
-	print_vec_lincomb(s);
+	print_vec_lincomb(s, opt_zero);
       free_vec_lincomb(s);
     }
-  
-#if 0
-  hash_print_stat(s, 10);
-#endif
-  
+
   v_free(sh1);
   v_free(sh2);
   

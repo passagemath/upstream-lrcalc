@@ -26,3 +26,12 @@ CHANGE LOG
 
 1.1.3:  Changed the quantum(rows,cols) function so it works with Maple 7.
 
+1.1.4:  Updated the c code so it compiles with newer versions of gcc.
+        Also added a "-f rows,cols" option to mult which is similar to
+        the -q option, bus uses fusion product notation (large
+        partitions in place of the deformation parameter "q" to obtain
+        a Z-basis for the quantum ring of Gr(d,n), see section 8 of my
+        paper "Quantum cohomology of Grassmannians" for details.)
+        A corresponding command "fusion(rows,cols)" was added to the
+        maple interface.
+

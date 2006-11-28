@@ -49,7 +49,7 @@ hashkey_t v_hash(vector *v);
 void print_vec_set(set *s);
 void free_vec_set(set *s);
 
-void print_vec_lincomb(hashtab *ht);
+void print_vec_lincomb(hashtab *ht, int opt_zero);
 void free_vec_lincomb(hashtab *ht);
 
 

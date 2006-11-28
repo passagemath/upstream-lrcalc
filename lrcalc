@@ -209,6 +209,18 @@ quantum := proc(rows, cols)
   0$0;
 end:
 
+fusion := proc(rows, cols)
+  global QUANTUM_OPTS;
+  if rows <= 0 or cols <= 0 then
+    QUANTUM_OPTS := ``;
+  else
+    QUANTUM_OPTS := cat(` -f`, rows, `,`, cols);
+  fi;
+  readlib(forget);
+  forget(_call_smult);
+  0$0;
+end:
+
 QUANTUM_OPTS := ``:
 
 _call_smult := proc(fac1, fac2)
