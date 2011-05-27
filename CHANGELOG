@@ -35,3 +35,7 @@ CHANGE LOG
         A corresponding command "fusion(rows,cols)" was added to the
         maple interface.
 
+1.1.5:  Updated the C code so it compiles (mostly) without warnings
+        on 64 bit computers.
+
+

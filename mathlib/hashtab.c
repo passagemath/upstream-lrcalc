@@ -8,7 +8,6 @@
 
 int hash_key_used;
 void *hash_removed_key;
-void *hash_removed_value;
 
 hashtab *hash_new(cmp_t cmp, hash_t hsh)
 {
@@ -56,9 +55,9 @@ void hash_copy(hashtab *dst, hashtab *src)
   for (hash_first(src, itr); hash_good(itr); hash_next(itr))
     {
       void *key = hash_key(itr);
-      void *val = hash_value(itr);
+      int val = hash_value(itr);
       hashkey_t k = itr.s->elts[itr.i].hkey;
-      void **valp = _hash_mkfind_k(dst, key, k);
+      int *valp = _hash_mkfind_k(dst, key, k);
       *valp = val;
     }
 }
@@ -132,25 +131,25 @@ void hash_makeroom(hashtab *s, size_t sz)
 }
 
 
-void * hash_lookup(hashtab *s, void *key)
+int hash_lookup(hashtab *s, void *key)
 {
   hashkey_t k = hash_hash(s)(key);
   size_t i = hash_find(s, key, k);
 
-  return (i == _S_END) ? NULL : s->elts[i].value;
+  return (i == _S_END) ? 0 : s->elts[i].value;
 }
 
 
-void * hash_insert(hashtab *ht, void *key, void *value)
+int hash_insert(hashtab *ht, void *key, int value)
 {
-  void **valuep = hash_mkfind(ht, key);
-  void *oldvalue = *valuep;
+  int *valuep = hash_mkfind(ht, key);
+  int oldvalue = *valuep;
   *valuep = value;
   return oldvalue;
 }
 
 
-void **_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k)
+int *_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k)
 {
   size_t i = hash_find(ht, key, k);
   
@@ -168,7 +167,7 @@ void **_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k)
       
       elts[i].hkey = k;
       elts[i].key = key;
-      elts[i].value = NULL;
+      elts[i].value = 0;
       
       elts[i].next = ht->table[index];
       ht->table[index] = i;
@@ -185,7 +184,7 @@ void **_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k)
 }
 
 
-void * _hash_remove_k(hashtab *s, void *e, hashkey_t k)
+int _hash_remove_k(hashtab *s, void *e, hashkey_t k)
 {
   size_t index = k % hash_tabsz(s);
   size_t i = s->table[index];
@@ -203,8 +202,7 @@ void * _hash_remove_k(hashtab *s, void *e, hashkey_t k)
   if (i == _S_END)
     {
       hash_removed_key = NULL;
-      hash_removed_value = NULL;
-      return NULL;
+      return 0;
     }
   
   if (prev == _S_END)
@@ -218,9 +216,8 @@ void * _hash_remove_k(hashtab *s, void *e, hashkey_t k)
   hash_card(s)--;
   
   hash_removed_key = elts[i].key;
-  hash_removed_value = elts[i].value;
-  
-  return hash_removed_value;
+
+  return elts[i].value;
 }
 
 
@@ -317,7 +314,7 @@ void lincomb_add_multiple(hashtab *dst, int c, hashtab *lc,
       int value = hash_intvalue(itr);
       hashkey_t k = itr.s->elts[itr.i].hkey;
       
-      void **valp = _hash_mkfind_k(dst, key, k);
+      int *valp = _hash_mkfind_k(dst, key, k);
       int newcoef = (*((int *) valp) += c * value);
       int hku = hash_key_used;
       

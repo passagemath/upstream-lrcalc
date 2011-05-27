@@ -28,7 +28,7 @@ struct _hashelt {
   size_t next;
   hashkey_t hkey;
   void *key;
-  void *value;
+  int value;
 };
 
 #define _S_END	((size_t) -1)
@@ -50,7 +50,6 @@ struct _hashelt {
 
 extern int hash_key_used;
 extern void *hash_removed_key;
-extern void *hash_removed_value;
 
 
 hashtab *hash_new(cmp_t cm, hash_t hsh);
@@ -64,16 +63,16 @@ hashtab *hash_new_copy(hashtab *ht);
 /* For int type values */
 
 #define hash_lookupint(ht, key) \
-	((int) hash_lookup((ht), (key)))
-#define hash_insertint(ht, key, value) \
-	((int) hash_insert(ht, (key), (void *)(value)))
+  (hash_lookup((ht), (key)))
+#define hash_insertint(ht, key, value)			\
+  (hash_insert(ht, (key), (value)))
 #define hash_mkfindint(ht, key) \
-	((int *) hash_mkfind((ht), (key)))
+  (hash_mkfind((ht), (key)))
 
 
 /* Returns value associated with key, or NULL if key is not in table. */
 
-void *hash_lookup(hashtab *ht, void *key);
+int hash_lookup(hashtab *ht, void *key);
 
 
 /* Associates value to key.  The old value of key is returned.
@@ -92,7 +91,7 @@ void *hash_lookup(hashtab *ht, void *key);
  *   free(oldvalue);
  */
 
-void *hash_insert(hashtab *ht, void *key, void *value);
+int hash_insert(hashtab *ht, void *key, int value);
 
 
 /* Creates an entry in the hashtable with the given key.
@@ -148,7 +147,7 @@ typedef struct {
 #define hash_good(itr)	((itr).i != _S_END)
 #define hash_key(itr)	((itr).s->elts[(itr).i].key)
 #define hash_value(itr) ((itr).s->elts[(itr).i].value)
-#define hash_intvalue(itr) ((int) (itr).s->elts[(itr).i].value)
+#define hash_intvalue(itr) ((int)(long) (itr).s->elts[(itr).i].value)
 
 #define hash_first(s,itr)	(_hash_first((s), &(itr)))
 
@@ -159,9 +158,8 @@ typedef struct {
 void _hash_first(hashtab *s, hash_itr *itr);
 void _hash_next(hash_itr *itr);
 
-void **_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k);
-void * _hash_remove_k(hashtab *ht, void *key, hashkey_t k);
-
+int *_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k);
+int _hash_remove_k(hashtab *ht, void *key, hashkey_t k);
 
 
 #endif

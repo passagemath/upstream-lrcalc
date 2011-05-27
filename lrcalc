@@ -296,3 +296,4 @@ _subpart := proc(p1, p2)
 end:
 
 
+LRCALC_BIN_PATH := `/home/abuch/c/lrcalc/bin`:

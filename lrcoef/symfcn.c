@@ -672,7 +672,7 @@ hashtab *schur_lc_mult(hashtab *lc1, hashtab *lc2, int maxrows)
 	  int c2 = hash_intvalue(itr2);
 	  
 	  vecpair *vp = vp_new_unordered(v_new_copy(v1), v_new_copy(v2));
-	  void **valp = hash_mkfind(pairs, vp);
+	  int *valp = hash_mkfind(pairs, vp);
 	  *((int *) valp) += c1 * c2;
 	  if (! hash_key_used)
 	    vp_free(vp);
