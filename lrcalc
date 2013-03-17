@@ -1,5 +1,5 @@
 #  Littlewood-Richardson Calculator
-#  Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+#  Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 #  See the file LICENSE for license information.
 
 tos := proc(expr)
@@ -296,4 +296,5 @@ _subpart := proc(p1, p2)
 end:
 
 
-LRCALC_BIN_PATH := `/home/abuch/c/lrcalc/bin`:
+LRCALC_BIN_PATH := `/usr/local/bin`:
+

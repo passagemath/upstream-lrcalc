@@ -5,30 +5,31 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 extern char *optarg;
 
-#include <hashtab.h>
-#include <vector.h>
 #include <vectarg.h>
-
-#include "symfcn.h"
+#include "lincomb.h"
+#include "schublib.h"
 #include "maple.h"
 
+#define PROGNAME "schubmult"
 
+  
 void print_usage()
 {
-  fprintf(stderr, "usage: skew [-m] [-r rows] outer / inner\n");
+  fprintf(stderr, "usage: " PROGNAME " [-m] [-r rank] perm1 - perm2\n");
   exit(1);
 }
 
 int main(int ac, char **av)
 {
   hashtab *s;
-  vector *outer, *inner;
-  int c;
+  vector *w1, *w2;
   int opt_maple = 0;
-  int opt_rows = 0;
-
+  int rank = 0;
+  int c;
+  
   while ((c = getopt(ac, av, "mr:")) != EOF)
     switch (c)
       {
@@ -36,34 +37,31 @@ int main(int ac, char **av)
 	opt_maple = 1;
 	break;
       case 'r':
-	opt_rows = atoi(optarg);
+	rank = atoi(optarg);
+	if (rank < 0)
+	  print_usage();
 	break;
       default:
 	print_usage();
       }
   
-  outer = get_vect_arg(ac, av);
-  inner = get_vect_arg(ac, av);
-  
-  if (inner == NULL)
+  w1 = get_vect_arg(ac, av);
+  w2 = get_vect_arg(ac, av);
+  if (w1 == NULL || w2 == NULL)
     print_usage();
   
-  s = skew(outer, inner, opt_rows);
+  s = mult_schubert(w1, w2, rank);
+  
   if (opt_maple)
-    maple_print_lincomb(s, "s", 1);
+    maple_print_lincomb(s, "X", 1);
   else
     print_vec_lincomb(s, 0);
   
-#if 0
-  hash_print_stat(s, 10);
-#endif
-  
-  v_free(outer);
-  v_free(inner);
+  v_free(w1);
+  v_free(w2);
   free_vec_lincomb(s);
   
   memory_report;
   
   return 0;
 }
-

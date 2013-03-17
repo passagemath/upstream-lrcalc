@@ -1,0 +1,8 @@
+TODO for the official 1.1.6 release:
+
+* Proofread the README / AUTHORS / NEWS files
+
+* The header files are installed all together in
+  /usr/local/include/lrcalc/.  Is this appropriate?
+
+* Merge schubert/maple.c in lrcoef/maple.c.

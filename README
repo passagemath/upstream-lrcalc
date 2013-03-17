@@ -1,38 +1,34 @@
-Littlewood-Richardson Calculator
-Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+Littlewood-Richardson Calculator version 1.1.6
+Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 
 
 INSTALLATION
+============
 
 This file explains how to install and use the programs.  See the file
-CHANGELOG for a list of bug-fixes and enhancements.
+ChangeLog for a list of bug-fixes and enhancements.
 
-To compile the programs, simply type "./configure" at your shell
-prompt in the this directory.
+This project uses the standard installation procedure:
 
-% ./configure
+    ./configure
+    make
+    sudo make install
 
-This will compile the C programs and install them in a subdirectory
-called bin under this directory.  The program ./configure assumes that
-you have a standard unix-type operating system with gcc and GNU make
-installed.  (If your system is different, you may have to edit the 
-makefiles in the mathlib and lrcoef directories.)
+The last step is optional and installs the following programs
+(typically in /usr/local/bin):
 
-After successful installation, you will have the following programs in
-the bin directory under the current directory:
+    lrcoef, lrskew, mult, coprod, schubmult
 
-    lrcoef, skew, mult, coprod
+as well as lrcalc's header files (typically in
+/usr/local/include/lrcalc/).
 
-To use the programs, include the bin directory in your path.  This is
-done with the command (for csh/tcsh users):
+You may want to further run the test suite:
 
-% set path = ( $path `pwd`/bin )
+    make check
 
-(Note that the above line only works if you are in the lrcalc
-directory.  You might prefer to edit your .cshrc file to set the path
-automatically when you login to your computer.  Just add the above
-"set path" command to the end of your .cshrc, but replace `pwd` with
-the full path of the lrcalc directory.)
+
+USAGE
+=====
 
 A very brief description of the programs is as follows:
 
@@ -83,6 +79,19 @@ Example:
 1  (4, 1, 1)
 1  (3, 1, 1, 1)
 
+Experimental feature: mult can also compute quantum / fusion
+coefficients.
+
+Example
+
+% mult -f 3,2 3 2 1 - 3 2 1
+1  (4, 4, 4)
+1  (5, 4, 3)
+
+% mult -q 3,2 3 2 1 - 3 2 1
+1  (2)
+1  (1, 1)
+
 
 coprod:  Calculate coproducts in the ring of symmetric functions.
 ------
@@ -110,8 +119,18 @@ Example:
 1  (2, 2)  (2)
 
 
+schubmult:  Expand a product of two Schubert polynomials in the basis
+---------   of Schubert polynomials.
+
+Example:
+
+% ./schubmult 1 3 2 - 1 3 2
+1  (1, 4, 2, 3)
+1  (2, 3, 1)
+
 
 MAPLE INTERFACE
+===============
 
 The file lrcalc in this directory provides an interface between the
 above C programs and Maple.  It allows you to combine the notational
@@ -158,7 +177,8 @@ s[3, 3] + s[4, 2] + s[2, 2, 1, 1] + s[2, 2, 2] + 2 s[3, 2, 1] + s[4, 1, 1]
                                     7869992
 
 
-
 Enjoy!
 
 Anders Skovsted Buch  (Nov 15, 1999)
+Updated for 1.1.6 beta by Nicolas M. Thiéry (Jan 9 2012)
+

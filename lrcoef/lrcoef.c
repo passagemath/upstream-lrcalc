@@ -1,5 +1,5 @@
 /*  Littlewood-Richardson Calculator
- *  Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+ *  Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
  *  See the file LICENSE for license information.
  */
 
