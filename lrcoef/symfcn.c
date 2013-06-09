@@ -186,7 +186,7 @@ long long lrcoef(vector *outer, vector *inner1, vector *inner2)
 {
   vector *out, *in1, *in2, *out_conj, *cont, *vtmp;
   int w_out, w_in1, w_in2, do_swap;
-  int rows, cols, i, j, stack_sz, sp, x;
+  int rows, i, j, stack_sz, sp, x;
   int *skewtab, *itab, *jtab, *max_tab;
   long long res;
   
@@ -292,7 +292,6 @@ long long lrcoef(vector *outer, vector *inner1, vector *inner2)
     }
   
   rows = v_length(out);
-  cols = v_elem(out, 0);
   
   vtmp = v_new(rows);
   for (i = 0; i < v_length(in1); i++)
@@ -833,7 +832,7 @@ list *quantum_reduce(hashtab* s, int rows, int cols)
 
 void fusion_reduce(hashtab *lc, int rows, int cols, int opt_zero)
 {
-  int i, j, k, n, lamj;
+  int i, j, k, lamj;
   list *qlist = _quantum_reduce(lc, rows, cols);
   if (l_length(qlist) == 0)
     {
@@ -842,7 +841,6 @@ void fusion_reduce(hashtab *lc, int rows, int cols, int opt_zero)
     }
   hash_copy(lc, l_elem(qlist, 0));
   hash_free(l_elem(qlist, 0));
-  n = rows + cols;
   for (i = 1; i < l_length(qlist); i++)
     {
       hashtab *tab = l_elem(qlist, i);

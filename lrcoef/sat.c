@@ -202,6 +202,12 @@ int main(int ac, char **av)
   extern int optind;
   extern char *optarg;
   
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
+
   while ((c = getopt(ac, av, "cvfs:")) != EOF)
     switch (c)
       {

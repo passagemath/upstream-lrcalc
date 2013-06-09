@@ -29,6 +29,12 @@ int main(int ac, char **av)
   int opt_maple = 0;
   int opt_rows = 0;
 
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
+  
   while ((c = getopt(ac, av, "mr:")) != EOF)
     switch (c)
       {

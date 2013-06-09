@@ -26,6 +26,12 @@ int main(int ac, char **av)
   vector *part;
   int c, opt_all = 0;
   
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
+  
   while ((c = getopt(ac, av, "a")) != EOF)
     switch (c)
       {

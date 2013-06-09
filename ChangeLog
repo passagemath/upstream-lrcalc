@@ -4,6 +4,23 @@ Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 
 CHANGE LOG
 
+1.1.7:  Added the command line program "lrcalc" that does the same as
+	mult, skew, coprod, lrcoef, and lrskew.  The Fedora distribution
+	should just include this program in an appropriate binary
+	directory.
+	
+	Got rid of exit() call in alloc.c.  In stead longjmp() is called
+	if an "out of memory" event occurs.  Any program using the
+	internal lrcalc functions is responsible for first calling
+	setjmp(lrcalc_panic_frame).
+	
+	Wrote salloc.c which can replace alloc.c and cleans up all memory
+	if an "out of memory" event occurs.  This may be desirable for
+	SAGE.
+
+	NOTE: The Makefiles should use -DSAGE if salloc.c is used.
+	
+	
 1.1.6:  Let lrcalc build a shared library on Cygwin
 
 

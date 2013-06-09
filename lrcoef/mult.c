@@ -35,6 +35,12 @@ int main(int ac, char **av)
   int opt_fusion = 0;
   char *p;
   
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
+
   while ((c = getopt(ac, av, "mzr:q:f:")) != EOF)
     switch (c)
       {
