@@ -1,0 +1,32 @@
+Schubert multiplication
+-----------------------
+
+To compile this program, do the following:
+
+1) Get lrcalc-1.1.4.tar.gz from my web site
+   http://math.rutgers.edu/~asbuch/lrcalc/ 
+
+2) Unpack them with "tar xvf lrcalc-1.1.4.tar" and "tar xvf schmult.tar.gz"
+
+3) cd lrcalc
+
+4) ./configure
+
+5) cd schubert
+
+6) make
+
+With luck, and if you are on a reasonably standard unix system, this will
+produce a program called schubmult.
+
+Example:
+
+% ./schubmult 1 3 2 - 1 3 2
+1  (1, 4, 2, 3)
+1  (2, 3, 1)
+
+Have fun!
+
+Anders Buch
+
+

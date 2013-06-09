@@ -1,5 +1,5 @@
 /*  Littlewood-Richardson Calculator
- *  Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+ *  Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
  *  See the file LICENSE for license information.
  */
 
@@ -19,38 +19,32 @@
 
 #ifndef DEBUG_MEMORY
 
-void out_of_memory()
-{
-  fprintf(stderr, "out of memory.\n");
-  exit(1);
-}
-
-void *amalloc(int size)
+void *amalloc(size_t size)
 {
   void *p = malloc(size);
   if (p == NULL)
-    out_of_memory();
+    longjmp(lrcalc_panic_frame, 1);
   return p;
 }
 
-void *acalloc(int size, int num)
+void *acalloc(size_t size, size_t num)
 {
   void *p = calloc(size, num);
   if (p == NULL)
-    out_of_memory();
+    longjmp(lrcalc_panic_frame, 1);
   return p;
 }
 
-void *arealloc(void *p, int size)
+void *arealloc(void *p, size_t size)
 {
   p = realloc(p, size);
   if (p == NULL)
-    out_of_memory();
+    longjmp(lrcalc_panic_frame, 1);
   return p;
 }
 
 #else
-/*  not DEBUG_MEMORY  */
+/*  DEBUG_MEMORY  */
 
 int memory_used = 0;
 
@@ -58,7 +52,7 @@ void out_of_memory()
 {
   fprintf(stderr, "out of memory.\n");
   fprintf(stderr, "Memory balance: %d\n", memory_used);
-  exit(1);
+  longjmp(lrcalc_panic_frame, 1);
 }
 
 #define ALIGN 16
@@ -106,15 +100,15 @@ static void check_storage(void *p)
       { dirty = 1; idx = ADD_TO_PTR + size + i; }
   if (dirty)
     {
-      fprintf(stderr, "WARNING: Pointer 0x%08x dirty at index %d (0x%08x).\n",
-	      (int) s, idx, (int) (s + idx));
+      fprintf(stderr, "WARNING: Pointer %p dirty at index %d (%p).\n",
+	      s, idx, s + idx);
     }
 }
 
 #endif
 
 
-void *amalloc(int size)
+void *amalloc(size_t size)
 {
   void *p = malloc(size + ADD_TO_SIZE);
 #ifdef DEBUG_MEMORY_PRINT
@@ -131,7 +125,7 @@ void *amalloc(int size)
   return ((char *) p) + ADD_TO_PTR;
 }
 
-void *acalloc(int num, int size)
+void *acalloc(size_t num, size_t size)
 {
   void *p = calloc(1, size * num + ADD_TO_SIZE);
 #ifdef DEBUG_MEMORY_PRINT
@@ -147,9 +141,9 @@ void *acalloc(int num, int size)
   return ((char *) p) + ADD_TO_PTR;
 }
 
-void *arealloc(void *p, int size)
+void *arealloc(void *p, size_t size)
 {
-  ((char *) p) -= ADD_TO_PTR;
+  p -= ADD_TO_PTR;
 #ifdef DEBUG_MEMORY_PRINT
   fprintf(stderr, "realloc 0x%08x -> ", (int) p);
 #endif
@@ -171,7 +165,7 @@ void *arealloc(void *p, int size)
 void afree(void *p)
 {
   int size;
-  ((char *) p) -= ADD_TO_PTR;
+  p -= ADD_TO_PTR;
 #ifdef DEBUG_PTR_REF
   check_storage(p);
   scramble_storage(p);

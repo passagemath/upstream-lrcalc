@@ -1,14 +1,17 @@
 CC=gcc #-pipe
 CFLAGS=-O6 -I ../mathlib -Wall # -DDEBUG
-#CFLAGS=-Wall -g -DDEBUG -I ../mathlib
+#CFLAGS=-Wall -g -DDEBUG -DSAGE -I ../mathlib
 LDFLAGS=-s
 LDLIBS=../mathlib/mathlib.a
 
 OBJS=symfcn.o maple.o
 
-PROGS=lrcoef skew mult coprod lrskew sat
+PROGS=lrcalc lrcoef skew mult coprod lrskew sat
 
 all: $(PROGS)
+
+lrcalc: lrcalc.o $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) lrcalc.o $(LDLIBS) -o lrcalc
 
 lrcoef: lrcoef.o $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) lrcoef.o $(LDLIBS) -o lrcoef

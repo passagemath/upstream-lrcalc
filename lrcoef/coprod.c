@@ -1,5 +1,5 @@
 /*  Littlewood-Richardson Calculator
- *  Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+ *  Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
  *  See the file LICENSE for license information.
  */
 
@@ -25,6 +25,12 @@ int main(int ac, char **av)
   hashtab *s;
   vector *part;
   int c, opt_all = 0;
+  
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
   
   while ((c = getopt(ac, av, "a")) != EOF)
     switch (c)

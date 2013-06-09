@@ -1,10 +1,11 @@
 CC=gcc #-pipe
 CFLAGS=-O6 -Wall # -DDEBUG
-#CFLAGS=-Wall -g -DDEBUG
+#CFLAGS=-Wall -g -DDEBUG -DSAGE
 
 MATHLIB=mathlib.a
 
 OBJS=alloc.o list.o vectarg.o vector.o hashtab.o set.o
+#OBJS=salloc.o list.o vectarg.o vector.o hashtab.o set.o
 
 def: $(MATHLIB)
 

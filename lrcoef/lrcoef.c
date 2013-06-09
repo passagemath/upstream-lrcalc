@@ -1,9 +1,10 @@
 /*  Littlewood-Richardson Calculator
- *  Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+ *  Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
  *  See the file LICENSE for license information.
  */
 
 #include <stdio.h>
+#include <setjmp.h>
 #include <unistd.h>
 extern char *optarg;
 
@@ -24,6 +25,12 @@ void print_usage()
 int main(int ac, char **av)
 {
   vector *lm, *mu, *nu;
+
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
   
   nu = get_vect_arg(ac, av);
   lm = get_vect_arg(ac, av);

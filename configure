@@ -11,5 +11,9 @@ make
 
 cd ../lrcoef
 make
+mv lrcalc sat lrcoef skew mult coprod lrskew ../bin
 
-mv sat lrcoef skew mult coprod lrskew ../bin
+cd ../schubert
+make
+mv schubmult ../bin
+

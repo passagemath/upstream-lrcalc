@@ -1,5 +1,5 @@
 Littlewood-Richardson Calculator
-Copyright (C) 1999 Anders S. Buch (abuch@math.mit.edu)
+Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 
 
 CHANGE LOG
@@ -38,4 +38,11 @@ CHANGE LOG
 1.1.5:  Updated the C code so it compiles (mostly) without warnings
         on 64 bit computers.
 
+1.1.7:  The lrcalc library now uses setjmp() and longjmp() to recover
+        from "out of memory" events.  In addition, the command
+        "lrcalc" has been added, which is able to perform the
+        functions mult, skew, coprod, lrcoef, and lrskew.  The purpose
+        of these changes is to make the LR Calculator more compatible
+        with SAGE and Fedora.  Finally, the program "schubmult" for
+        multiplication of Schubert polynomials has been added.
 

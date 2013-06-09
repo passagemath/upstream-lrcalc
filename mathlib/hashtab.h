@@ -62,6 +62,11 @@ hashtab *hash_new_copy(hashtab *ht);
 
 /* For int type values */
 
+/* This macro renames hash_insert to avoids a name clash leading to a
+   segmentation fault on Open Solaris.
+   See also http://trac.sagemath.org/sage_trac/ticket/11563 */
+#define hash_insert lrcalc_hash_insert
+
 #define hash_lookupint(ht, key) \
   (hash_lookup((ht), (key)))
 #define hash_insertint(ht, key, value)			\
