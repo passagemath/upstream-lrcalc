@@ -12,7 +12,7 @@ extern char *optarg;
 
 #include "symfcn.h"
 #include "maple.h"
-
+#include "lrcalc_jump.h"
 
 #define MULT_USAGE \
 "lrcalc mult [-mz] [-r rows] [-q rows,cols] [-f rows,level] part1 - part2\n"

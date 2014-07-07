@@ -10,7 +10,7 @@
 #include <vector.h>
 
 #include "symfcn.h"
-
+#include "lrcalc_jump.h"
 
 #define NUM_PRIMES	50
 

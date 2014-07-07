@@ -14,7 +14,7 @@ extern char *optarg;
 
 #include "symfcn.h"
 #include "maple.h"
-
+#include "lrcalc_jump.h"
 
 void print_usage()
 {

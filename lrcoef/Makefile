@@ -1,6 +1,6 @@
 CC=gcc #-pipe
 CFLAGS=-O6 -I ../mathlib -Wall # -DDEBUG
-#CFLAGS=-Wall -g -DDEBUG -DSAGE -I ../mathlib
+#CFLAGS=-Wall -g -DDEBUG -I ../mathlib
 LDFLAGS=-s
 LDLIBS=../mathlib/mathlib.a
 

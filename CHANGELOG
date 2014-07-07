@@ -46,3 +46,7 @@ CHANGE LOG
         with SAGE and Fedora.  Finally, the program "schubmult" for
         multiplication of Schubert polynomials has been added.
 
+1.1.8:  Linking problems on OS X reported by Volker Braun and fixed by
+        François Bissey.
+
+
