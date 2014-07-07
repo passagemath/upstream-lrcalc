@@ -11,7 +11,7 @@ extern char *optarg;
 #include <vectarg.h>
 
 #include "symfcn.h"
-
+#include "lrcalc_jump.h"
 
 void print_usage()
 {

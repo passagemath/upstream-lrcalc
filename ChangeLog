@@ -4,6 +4,10 @@ Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 
 CHANGE LOG
 
+1.1.8:  Linking problems on OS X reported by Volker Braun and fixed by
+	François Bissey.
+	
+	
 1.1.7:  Added the command line program "lrcalc" that does the same as
 	mult, skew, coprod, lrcoef, and lrskew.  The Fedora distribution
 	should just include this program in an appropriate binary

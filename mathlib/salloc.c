@@ -13,6 +13,7 @@
 #include <string.h>
 
 #include "alloc.h"
+#include "lrcalc_jump.h"
 
 typedef struct mlink {
   struct mlink *next;
