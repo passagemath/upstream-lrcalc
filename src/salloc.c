@@ -13,7 +13,7 @@
 #include <string.h>
 
 #include "alloc.h"
-#include "lrcalc_jump.h"
+jmp_buf lrcalc_panic_frame;
 
 typedef struct mlink {
   struct mlink *next;

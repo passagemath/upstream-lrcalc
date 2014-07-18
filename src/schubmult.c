@@ -8,7 +8,7 @@
 #include <stdlib.h>
 extern char *optarg;
 
-#include <vectarg.h>
+#include "vectarg.h"
 #include "lincomb.h"
 #include "schublib.h"
 #include "maple.h"
@@ -30,6 +30,12 @@ int main(int ac, char **av)
   int rank = 0;
   int c;
   
+  if (setjmp(lrcalc_panic_frame))
+    {
+      fprintf(stderr, "out of memory.\n");
+      exit(1);
+    }
+
   while ((c = getopt(ac, av, "mr:")) != EOF)
     switch (c)
       {

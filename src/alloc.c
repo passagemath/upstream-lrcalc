@@ -8,7 +8,7 @@
 #include <string.h>
 
 #include "alloc.h"
-#include "lrcalc_jump.h"
+jmp_buf lrcalc_panic_frame;
 
 #if 0
 #define DEBUG_MEMORY_PRINT

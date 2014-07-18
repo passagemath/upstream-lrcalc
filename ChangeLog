@@ -4,27 +4,33 @@ Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 
 CHANGE LOG
 
+
+1.2:    Replaced the programs mult, skew, etc. with the single program
+	lrcalc.  This will put less files in /usr/local/bin.
+	Also changed directory structure of source code.
+
+
 1.1.8:  Linking problems on OS X reported by Volker Braun and fixed by
 	François Bissey.
-	
-	
+
+
 1.1.7:  Added the command line program "lrcalc" that does the same as
 	mult, skew, coprod, lrcoef, and lrskew.  The Fedora distribution
 	should just include this program in an appropriate binary
 	directory.
-	
+
 	Got rid of exit() call in alloc.c.  In stead longjmp() is called
 	if an "out of memory" event occurs.  Any program using the
 	internal lrcalc functions is responsible for first calling
 	setjmp(lrcalc_panic_frame).
-	
+
 	Wrote salloc.c which can replace alloc.c and cleans up all memory
 	if an "out of memory" event occurs.  This may be desirable for
 	SAGE.
 
 	NOTE: The Makefiles should use -DSAGE if salloc.c is used.
-	
-	
+
+
 1.1.6:  Let lrcalc build a shared library on Cygwin
 
 
@@ -38,10 +44,8 @@ CHANGE LOG
 1.1.6 beta:  Merged in the schubert code from schmult-1.1.5.tar.gz
         Standard automake/autoconf build system (autoconfiscation)
 
-        Blames for issues with this build system and/or with this beta
-	prerelease should go to:
-
-	    Nicolas M. Thiéry <nthiery at users.sf.net>
+	Thanks to Nicolas M. Thiéry and Jean-Pierre Flori for their help
+	with this release.
 
 
 1.1.5:  Updated the C code so it compiles (mostly) without warnings

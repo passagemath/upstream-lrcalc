@@ -12,7 +12,6 @@ extern char *optarg;
 
 #include "symfcn.h"
 #include "maple.h"
-#include "lrcalc_jump.h"
 
 #define MULT_USAGE \
 "lrcalc mult [-mz] [-r rows] [-q rows,cols] [-f rows,level] part1 - part2\n"
@@ -188,7 +187,7 @@ int skew_main(int ac, char **av)
   inner = get_vect_arg(ac, av);
   
   if (inner == NULL)
-    print_usage();
+    skew_usage();
   
   s = skew(outer, inner, opt_rows);
   if (opt_maple)
@@ -357,27 +356,35 @@ int lrtab_main(int ac, char **av)
 
 int main(int ac, char **av)
 {
+  char *cmd;
+  extern char ** environ;
+
   if (setjmp(lrcalc_panic_frame))
     {
       fprintf(stderr, "out of memory.\n");
       exit(1);
     }
-  
+
   if (ac < 2)
     print_usage();
-  
-  if (strcmp(av[1], "mult") == 0)
+
+  cmd = av[1];
+  if (cmd[0] == 'l' && cmd[1] == 'r')
+    cmd += 2;
+
+  if (strcmp(cmd, "mult") == 0)
     mult_main(ac-1, av+1);
-  else if (strcmp(av[1], "skew") == 0)
+  else if (strcmp(cmd, "skew") == 0)
     skew_main(ac-1, av+1);
-  else if (strcmp(av[1], "coprod") == 0)
+  else if (strcmp(cmd, "coprod") == 0)
     coprod_main(ac-1, av+1);
-  else if (strcmp(av[1], "lrcoef") == 0)
+  else if (strcmp(cmd, "coef") == 0)
     lrcoef_main(ac-1, av+1);
-  else if (strcmp(av[1], "lrtab") == 0)
+  else if (strcmp(cmd, "tab") == 0)
     lrtab_main(ac-1, av+1);
   else
     print_usage();
 
   return 0;
 }
+

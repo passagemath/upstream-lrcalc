@@ -3,9 +3,9 @@
  *  See the file LICENSE for license information.
  */
 
-#include <vector.h>
-#include <hashtab.h>
-#include <claim.h>
+#include "vector.h"
+#include "hashtab.h"
+#include "claim.h"
 
 #include "lincomb.h"
 #include "schublib.h"

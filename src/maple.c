@@ -8,6 +8,7 @@
 #include <hashtab.h>
 #include "maple.h"
 
+
 void maple_print_term(int c, vector *v, char *letter)
 {
   int x, i;
@@ -31,7 +32,11 @@ void maple_print_lincomb(hashtab *ht, char *letter, int nl)
   hash_itr itr;
   putchar('0');
   for (hash_first(ht, itr); hash_good(itr); hash_next(itr))
-    maple_print_term(hash_intvalue(itr), hash_key(itr), letter);
+    {
+      if (hash_intvalue(itr) == 0)
+	continue;
+      maple_print_term(hash_intvalue(itr), hash_key(itr), letter);
+    }
   if (nl)
     putchar('\n');
 }

@@ -1,8 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([lrcalc],[1.1.6],[asbuch at math rutgers edu])
-AC_CONFIG_SRCDIR(lrcoef/symfcn.h)
+AC_INIT([lrcalc],[1.2],[asbuch at math rutgers edu])
 AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_MACRO_DIR([m4])
@@ -49,7 +48,5 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset strtol])
 
 AC_CONFIG_FILES([Makefile
-                 lrcoef/Makefile
-                 mathlib/Makefile
-                 schubert/Makefile])
+                 src/Makefile])
 AC_OUTPUT
