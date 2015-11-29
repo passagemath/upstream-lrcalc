@@ -1,7 +1,7 @@
 #ifndef _SCHUBLIB_H
 #define _SCHUBLIB_H
 
-#include <hashtab.h>
+#include "hashtab.h"
 
 hashtab *trans(vector *w, int vars, hashtab *res);
 hashtab *monk(int i, hashtab *slc, int rank);

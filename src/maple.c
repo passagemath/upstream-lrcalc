@@ -4,8 +4,8 @@
  */
 
 #include <stdio.h>
-#include <vector.h>
-#include <hashtab.h>
+#include "vector.h"
+#include "hashtab.h"
 #include "maple.h"
 
 

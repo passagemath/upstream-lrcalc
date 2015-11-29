@@ -1,8 +1,8 @@
 #ifndef _SYMFCN_H
 #define _SYMFCN_H
 
-#include <hashtab.h>
-#include <vector.h>
+#include "hashtab.h"
+#include "vector.h"
 
 int part_itr_sz(vector *part);
 int part_itr_sub(vector *part, vector *outer);

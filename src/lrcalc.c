@@ -8,7 +8,7 @@
 #include <stdlib.h>
 extern char *optarg;
 
-#include <vectarg.h>
+#include "vectarg.h"
 
 #include "symfcn.h"
 #include "maple.h"

@@ -5,9 +5,9 @@
 
 #include <stdio.h>
 
-#include <alloc.h>
-#include <vector.h>
-#include <hashtab.h>
+#include "alloc.h"
+#include "vector.h"
+#include "hashtab.h"
 
 #include "symfcn.h"
 
