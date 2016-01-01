@@ -283,20 +283,32 @@ void _hash_next(hash_itr *itr)
 
 void hash_print_stat(hashtab *s, size_t range)
 {
-  vector *stat = v_new_zero(range + 1);
-  size_t index, i;
+  vector *stat = v_new_zero(range);
+  size_t index, used, cmp, count, c, i;
   
+  cmp = 0;
+  used = 0;
   for (index = 0; index < hash_tabsz(s); index++)
     {
-      int count = 0;
-      for (i = s->table[index]; i != _S_END; i = s->elts[i].next)
-	count++;
-      if (count > range)
-	count = range;
-      v_elem(stat, count)++;
+      i = s->table[index];
+      if (i == _S_END)
+	continue;
+      used++;
+      count = 0;
+      while (i != _S_END)
+	{
+	  count++;
+	  i = s->elts[i].next;
+	}
+      cmp += (count+1)*count/2;
+      c = (count > range) ? range : count;
+      v_elem(stat, c-1) += count;
     }
-  
-  puts("hash table distribution:");
+
+  printf("Hash table size: %lu\n", hash_tabsz(s));
+  printf("Hash table used: %lu\n", used);
+  printf("Total elements: %u\n", hash_card(s));
+  printf("Average compares: %f\n", ((double) cmp) / hash_card(s));
   v_printnl(stat);
   
   v_free(stat);

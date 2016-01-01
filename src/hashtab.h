@@ -166,5 +166,6 @@ void _hash_next(hash_itr *itr);
 int *_hash_mkfind_k(hashtab *ht, void *key, hashkey_t k);
 int _hash_remove_k(hashtab *ht, void *key, hashkey_t k);
 
+void hash_print_stat(hashtab *s, size_t range);
 
 #endif
