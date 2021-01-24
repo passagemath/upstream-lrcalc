@@ -30,7 +30,6 @@ void maple_print_term(int c, vector *v, char *letter)
 void maple_print_lincomb(hashtab *ht, char *letter, int nl)
 {
   hash_itr itr;
-  putchar('0');
   for (hash_first(ht, itr); hash_good(itr); hash_next(itr))
     {
       if (hash_intvalue(itr) == 0)

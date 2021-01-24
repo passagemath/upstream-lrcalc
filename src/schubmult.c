@@ -15,7 +15,7 @@ extern char *optarg;
 
 #define PROGNAME "schubmult"
 
-  
+
 void print_usage()
 {
   fprintf(stderr, "usage: " PROGNAME " [-m] [-r rank] perm1 - perm2\n");
@@ -59,10 +59,15 @@ int main(int ac, char **av)
   s = mult_schubert(w1, w2, rank);
   
   if (opt_maple)
-    maple_print_lincomb(s, "X", 1);
+    {
+      putchar('0');
+      maple_print_lincomb(s, "X", 1);
+    }
   else
-    print_vec_lincomb(s, 0);
-  
+    {
+      print_vec_lincomb(s, 0);
+    }
+
   v_free(w1);
   v_free(w2);
   free_vec_lincomb(s);

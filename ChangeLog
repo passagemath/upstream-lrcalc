@@ -5,6 +5,10 @@ Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 CHANGE LOG
 
 
+1.3:    Fixed option -m (Maple compatible output) for lrcalc mult.
+	(Thanks to Stepan Orevkov for the bug report.)
+
+
 1.2:    Replaced the programs mult, skew, etc. with the single program
 	lrcalc.  This will put less files in /usr/local/bin.
 	Also changed directory structure of source code.

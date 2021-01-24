@@ -99,8 +99,8 @@ int mult_main(int ac, char **av)
   s = mult(sh1, sh2, opt_rows);
   
   if (opt_maple)
-    printf("0");
-  
+    putchar('0');
+
   if (opt_quantum)
     {
       int n = opt_rows + opt_cols;
@@ -191,10 +191,15 @@ int skew_main(int ac, char **av)
   
   s = skew(outer, inner, opt_rows);
   if (opt_maple)
-    maple_print_lincomb(s, "s", 1);
+    {
+      putchar('0');
+      maple_print_lincomb(s, "s", 1);
+    }
   else
-    print_vec_lincomb(s, 0);
-  
+    {
+      print_vec_lincomb(s, 0);
+    }
+
   v_free(outer);
   v_free(inner);
   free_vec_lincomb(s);
