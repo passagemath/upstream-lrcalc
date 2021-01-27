@@ -8,71 +8,113 @@
 #include <stdlib.h>
 extern char *optarg;
 
+#include "alloc.h"
 #include "vectarg.h"
-#include "lincomb.h"
+#include "perm.h"
 #include "schublib.h"
 #include "maple.h"
+#include "ivlincomb.h"
 
 #define PROGNAME "schubmult"
 
 
 void print_usage()
 {
-  fprintf(stderr, "usage: " PROGNAME " [-m] [-r rank] perm1 - perm2\n");
+  fprintf(stderr, "usage: " PROGNAME " [-m] [-s] [-r rank] perm1 - perm2\n");
   exit(1);
 }
 
+void error(char *msg)
+{
+  fprintf(stderr, PROGNAME ": %s\n", msg);
+  print_usage();
+}
+
+void out_of_memory()
+{
+  fprintf(stderr, PROGNAME ": out of memory.\n");
+  alloc_report();
+  exit(1);
+}
+
+
 int main(int ac, char **av)
 {
-  hashtab *s;
-  vector *w1, *w2;
+  ivlincomb *lc;
+  ivector *w1, *w2;
   int opt_maple = 0;
+  int opt_string = 0;
   int rank = 0;
   int c;
-  
-  if (setjmp(lrcalc_panic_frame))
-    {
-      fprintf(stderr, "out of memory.\n");
-      exit(1);
-    }
 
-  while ((c = getopt(ac, av, "mr:")) != EOF)
+  alloc_getenv();
+
+  if (ac == 1)
+    print_usage();
+
+  while ((c = getopt(ac, av, "msr:")) != EOF)
     switch (c)
       {
       case 'm':
-	opt_maple = 1;
-	break;
+        opt_maple = 1;
+        break;
+      case 's':
+        opt_string = 1;
+        break;
       case 'r':
-	rank = atoi(optarg);
-	if (rank < 0)
-	  print_usage();
-	break;
+        rank = atoi(optarg);
+        if (rank < 0)
+          print_usage();
+        break;
       default:
-	print_usage();
+        print_usage();
       }
-  
+
   w1 = get_vect_arg(ac, av);
+  if (w1 == NULL)
+    error("perm1 is missing.");
   w2 = get_vect_arg(ac, av);
-  if (w1 == NULL || w2 == NULL)
-    print_usage();
-  
-  s = mult_schubert(w1, w2, rank);
-  
-  if (opt_maple)
+  if (w2 == NULL)
+    error("perm2 is missing.");
+
+  if (rank > 0 && opt_string)
+    error("-s cannot be used with -r.");
+
+  if (opt_string)
     {
-      putchar('0');
-      maple_print_lincomb(s, "X", 1);
+      if (rank > 0)
+        error("options -r and -s cannot be used together.");
+      if (str_iscompat(w1, w2) == 0)
+        error("incompatible strings.");
+      lc = mult_schubert_str(w1, w2);
     }
   else
     {
-      print_vec_lincomb(s, 0);
+      if (perm_valid(w1) == 0)
+        error("perm1 not a valid permutation.");
+      if (perm_valid(w2) == 0)
+        error("perm2 not a valid permutation.");
+      lc = mult_schubert(w1, w2, rank);
     }
 
-  v_free(w1);
-  v_free(w2);
-  free_vec_lincomb(s);
-  
-  memory_report;
-  
+  if (lc == NULL)
+    {
+      iv_free(w1);
+      iv_free(w2);
+      out_of_memory();
+    }
+
+  if (opt_maple)
+    maple_print_lincomb(lc, "X", 0);
+  else
+    ivlc_print(lc, 0);
+
+#ifdef DEBUG_MEMORY
+  iv_free(w1);
+  iv_free(w2);
+  ivlc_free_all(lc);
+#endif
+
+  alloc_report();
   return 0;
 }

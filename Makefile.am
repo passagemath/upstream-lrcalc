@@ -10,3 +10,4 @@ lrcalc.maple: lrcalc.maple.src config.status
 	cp lrcalc.maple.src lrcalc.maple
 	echo "LRCALC_BIN_PATH := \"$(prefix)/bin/lrcalc\":" >> lrcalc.maple
 
+CLEANFILES=lrcalc.maple

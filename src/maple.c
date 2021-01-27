@@ -4,38 +4,72 @@
  */
 
 #include <stdio.h>
-#include "vector.h"
-#include "hashtab.h"
+#include "ivector.h"
+#include "ivlincomb.h"
+#include "part.h"
+
 #include "maple.h"
 
 
-void maple_print_term(int c, vector *v, char *letter)
+void maple_print_term(int c, ivector *v, char *letter, int nz)
 {
-  int x, i;
-  
+  int i;
   putchar((c < 0) ? '-' : '+');
   c = abs(c);
   printf("%d*%s[", c, letter);
-  
-  for (i = 0; i < v_length(v); i++)
+
+  for (i = 0; i < iv_length(v); i++)
     {
+      if (nz && iv_elem(v, i) == 0)
+        break;
       if (i > 0)
 	putchar(',');
-      x = v_elem(v, i);
+      printf("%d", iv_elem(v, i));
+    }
+  putchar(']');
+}
+
+void maple_print_lincomb(ivlincomb *ht, char *letter, int nz)
+{
+  ivlc_iter itr;
+  putchar('0');
+  for (ivlc_first(ht, &itr); ivlc_good(&itr); ivlc_next(&itr))
+    {
+      if (ivlc_value(&itr) == 0)
+	continue;
+      maple_print_term(ivlc_value(&itr), ivlc_key(&itr), letter, nz);
+    }
+  putchar('\n');
+}
+
+void maple_qprint_term(int c, ivector *v, int level, char *letter)
+{
+  int d, x, i;
+  putchar((c < 0) ? '-' : '+');
+  c = abs(c);
+  d = part_qdegree(v, level);
+  printf("%d*q^%d*%s[", c, d, letter);
+  for (i = 0; i < iv_length(v); i++)
+    {
+      x = part_qentry(v, i, d, level);
+      if (x == 0)
+        break;
+      if (i)
+        putchar(',');
       printf("%d", x);
     }
   putchar(']');
 }
 
-void maple_print_lincomb(hashtab *ht, char *letter, int nl)
+void maple_qprint_lincomb(ivlincomb *lc, int level, char *letter)
 {
-  hash_itr itr;
-  for (hash_first(ht, itr); hash_good(itr); hash_next(itr))
+  ivlc_iter itr;
+  putchar('0');
+  for (ivlc_first(lc, &itr); ivlc_good(&itr); ivlc_next(&itr))
     {
-      if (hash_intvalue(itr) == 0)
+      if (ivlc_value(&itr) == 0)
 	continue;
-      maple_print_term(hash_intvalue(itr), hash_key(itr), letter);
+      maple_qprint_term(ivlc_value(&itr), ivlc_key(&itr), level, letter);
     }
-  if (nl)
-    putchar('\n');
+  putchar('\n');
 }

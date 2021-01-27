@@ -5,6 +5,20 @@ Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 CHANGE LOG
 
 
+2.0:    Much code has been reimplemented, including the code responsible
+	for counting LR tableaux.  As a result, some functions are faster
+	than in earlier versions.  The "lrcalc mult" and "lrcalc skew"
+	commands are close to twice as fast on some architectures.  The
+	"schubmult" command is slightly faster than before, while the
+	speed of "lrcalc coef" has not changed.
+
+	The underlying "liblrcalc" library no longer uses the setjmp()
+	call.  Any call to liblrcalc will now free or return all allocated
+	memory, even if an out-of-memory event happens in the middle of a
+	computation.  Test programs to verify this behavior can be found
+	in the directory "oomtest".
+
+
 1.3:    Fixed option -m (Maple compatible output) for lrcalc mult.
 	(Thanks to Stepan Orevkov for the bug report.)
 

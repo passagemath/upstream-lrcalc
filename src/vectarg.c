@@ -8,56 +8,57 @@
 #include <stdlib.h>
 extern int optind;
 
+#include "alloc.h"
 #include "vectarg.h"
-#include "vector.h"
+#include "ivector.h"
 
-vector *get_vect_arg(int ac, char **av)
+ivector *get_vect_arg(int ac, char **av)
 {
   int n, i, x;
   int *tmp;
-  vector *res;
+  ivector *res;
   char *endptr;
   char ch;
-  
+
   if (optind == ac)
     return NULL;
-  
+
   if (optind == 0)
     {
       optind++;
     }
   else
-    {  
+    {
       /* skip any "-" or "/" argument */
       ch = *(av[optind]);
       if ((ch == '-' || ch == '/') && *(av[optind] + 1) == '\0')
-	optind++;
+        optind++;
     }
-  
-  tmp = amalloc((ac - optind) * sizeof(int));
+
+  tmp = ml_malloc((ac - optind) * sizeof(int));
+  if (tmp == NULL)
+    return NULL;
   n = 0;
-  
+
   while (optind < ac)
     {
       x = strtol(av[optind], &endptr, 10);
       if (endptr == av[optind] || *endptr != '\0')
-	break;
-      
+        break;
+
       tmp[n++] = x;
       optind++;
     }
-  
+
   if (n == 0)
-    {
-      afree(tmp);
-      return NULL;
-    }
-  
-  res = v_new(n);
+    return NULL;
+
+  res = iv_new(n);
+  if (res == NULL)
+    return NULL;
   for (i = 0; i < n; i++)
-    v_elem(res, i) = tmp[i];
-  
-  afree(tmp);
-  
+    iv_elem(res, i) = tmp[i];
+  ml_free(tmp);
+
   return res;
 }
