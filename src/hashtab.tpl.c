@@ -51,6 +51,32 @@ int PREFIX(_grow_elts) (HASHTAB *ht, SIZE_T sz)
 }
 
 
+int PREFIX(equals)(HASHTAB *ht1, HASHTAB *ht2, int opt_zero)
+{
+  PREFIX(iter) itr;
+  PREFIX(keyval_t) *kv1, *kv2;
+  for (PREFIX(first)(ht1, &itr); PREFIX(good)(&itr); PREFIX(next)(&itr))
+    {
+      kv1 = PREFIX(keyval)(&itr);
+      if (kv1->value == 0 && opt_zero == 0)
+        continue;
+      kv2 = PREFIX(lookup)(ht2, kv1->key, kv1->hash);
+      if (kv2 == NULL || kv1->value != kv2->value)
+        return 0;
+    }
+  for (PREFIX(first)(ht2, &itr); PREFIX(good)(&itr); PREFIX(next)(&itr))
+    {
+      kv2 = PREFIX(keyval)(&itr);
+      if (kv2->value == 0 && opt_zero == 0)
+        continue;
+      kv1 = PREFIX(lookup)(ht1, kv2->key, kv2->hash);
+      if (kv1 == NULL || kv1->value != kv2->value)
+        return 0;
+    }
+  return 1;
+}
+
+
 #ifdef HASHTAB_LINCOMB
 void PREFIX(print)(HASHTAB *ht, int opt_zero)
 {

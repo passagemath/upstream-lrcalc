@@ -366,8 +366,8 @@ ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
     }
 
   svlen1 = iv_length(w1);
-  w1->length = perm_group(w1);
   svlen2 = iv_length(w2);
+  w1->length = perm_group(w1);
   w2->length = perm_group(w2);
 
   if (rank == 0)
@@ -389,12 +389,15 @@ ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
 
   poly = trans(w1, 0);
   if (poly == NULL)
-    return NULL;
+    {
+      w1->length = svlen1;
+      w2->length = svlen2;
+      return NULL;
+    }
   lc = mult_poly_schubert(poly, w2, rank);
 
   w1->length = svlen1;
   w2->length = svlen2;
-
   return lc;
 }
 

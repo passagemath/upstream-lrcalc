@@ -189,6 +189,10 @@ INLINE PREFIX(keyval_t) * PREFIX(remove) (HASHTAB *ht, KEY_T key, HASH_T hash)
 }
 
 
+/* Return 1 if equal; ignore zero values unless opt_zero != 0. */
+int PREFIX(equals)(HASHTAB *ht1, HASHTAB *ht2, int opt_zero);
+
+
 void PREFIX(print_stat)(HASHTAB *ht);
 
 
