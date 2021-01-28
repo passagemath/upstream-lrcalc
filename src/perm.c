@@ -199,7 +199,7 @@ ivector *perm2string(ivector *perm, ivector *dimvec)
   int n, i, j;
   ivector *res;
 
-  n = iv_elem(dimvec, iv_length(dimvec) - 1);
+  n = iv_length(dimvec) ? iv_elem(dimvec, iv_length(dimvec) - 1) : 0;
   res = iv_new(n);
   if (res == NULL)
     return NULL;

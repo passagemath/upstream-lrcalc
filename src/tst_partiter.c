@@ -37,7 +37,7 @@ int test_part_iter_box(int rows, int cols)
     np = np * (cols + i) / i;
 
   np1 = 0;
-  pitr_first(&itr, p, rows, cols, NULL, NULL, 0, 0);
+  pitr_box_first(&itr, p, rows, cols);
   for (; pitr_good(&itr); pitr_next(&itr))
     {
       assert(part_valid(p));
@@ -48,7 +48,7 @@ int test_part_iter_box(int rows, int cols)
   np1 = 0;
   for (size = 0; size < rows * cols + 2; size++)
     {
-      pitr_first(&itr, p, rows, cols, NULL, NULL, size, PITR_USE_SIZE);
+      pitr_box_sz_first(&itr, p, rows, cols, size);
       for (; pitr_good(&itr); pitr_next(&itr))
 	{
 	  assert(part_valid(p));
@@ -79,7 +79,7 @@ int test_part_iter_sub(int rows, int cols, ivector *outer)
       return -1;
     }
 
-  pitr_first(&itr, p, rows, cols, NULL, NULL, 0, 0);
+  pitr_box_first(&itr, p, rows, cols);
   for (; pitr_good(&itr); pitr_next(&itr))
     if (part_leq(p, outer))
       {
@@ -135,7 +135,7 @@ int test_part_iter_super(int rows, int cols, ivector *inner)
       return -1;
     }
 
-  pitr_first(&itr, p, rows, cols, NULL, NULL, 0, 0);
+  pitr_box_first(&itr, p, rows, cols);
   for (; pitr_good(&itr); pitr_next(&itr))
     if (part_leq(inner, p))
       {
@@ -192,7 +192,7 @@ int test_part_iter_between(int rows, int cols,
       return -1;
     }
 
-  pitr_first(&itr, p, rows, cols, NULL, NULL, 0, 0);
+  pitr_box_first(&itr, p, rows, cols);
   for (; pitr_good(&itr); pitr_next(&itr))
     if (part_leq(inner, p) && part_leq(p, outer))
       {
