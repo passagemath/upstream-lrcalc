@@ -88,4 +88,14 @@ check "src/tst_allperms 3" "(1,2,3)
 (3,1,2)
 (3,2,1)"
 
+check "src/tst_partiter 0 0" "success"
+check "src/tst_partiter 0 3" "success"
+check "src/tst_partiter 2 0" "success"
+check "src/tst_partiter 1 1" "success"
+check "src/tst_partiter 4 4" "success"
+
+check "src/tst_schubmult 1" "success"
+check "src/tst_schubmult 2" "success"
+check "src/tst_schubmult 4" "success"
+
 exit $failed

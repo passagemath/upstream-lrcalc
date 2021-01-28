@@ -244,7 +244,7 @@ int main(int ac, char **av)
 
   if (ac != 3)
     {
-      fprintf(stderr, "usage: testpitr2 rows cols\n");
+      fprintf(stderr, "usage: " PROGNAME " rows cols\n");
       exit(1);
     }
   rows = atol(av[1]);
@@ -294,6 +294,7 @@ int main(int ac, char **av)
   iv_free(p1);
   iv_free(p2);
 
+  puts("success");
   alloc_report();
   return 0;
 

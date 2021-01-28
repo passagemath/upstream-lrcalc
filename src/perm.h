@@ -41,7 +41,7 @@ INLINE int perm_length(ivector *w)
 INLINE int perm_group(ivector *w)
 {
   int i = iv_length(w);
-  while (i > 1 && iv_elem(w, i-1) == i)
+  while (i > 0 && iv_elem(w, i-1) == i)
     i--;
   return i;
 }

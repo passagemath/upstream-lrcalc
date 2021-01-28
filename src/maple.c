@@ -11,7 +11,7 @@
 #include "maple.h"
 
 
-void maple_print_term(int c, ivector *v, char *letter, int nz)
+static void _maple_print_term(int c, ivector *v, char *letter, int nz)
 {
   int i;
   putchar((c < 0) ? '-' : '+');
@@ -37,12 +37,12 @@ void maple_print_lincomb(ivlincomb *ht, char *letter, int nz)
     {
       if (ivlc_value(&itr) == 0)
 	continue;
-      maple_print_term(ivlc_value(&itr), ivlc_key(&itr), letter, nz);
+      _maple_print_term(ivlc_value(&itr), ivlc_key(&itr), letter, nz);
     }
   putchar('\n');
 }
 
-void maple_qprint_term(int c, ivector *v, int level, char *letter)
+static void _maple_qprint_term(int c, ivector *v, int level, char *letter)
 {
   int d, x, i;
   putchar((c < 0) ? '-' : '+');
@@ -69,7 +69,7 @@ void maple_qprint_lincomb(ivlincomb *lc, int level, char *letter)
     {
       if (ivlc_value(&itr) == 0)
 	continue;
-      maple_qprint_term(ivlc_value(&itr), ivlc_key(&itr), level, letter);
+      _maple_qprint_term(ivlc_value(&itr), ivlc_key(&itr), level, letter);
     }
   putchar('\n');
 }

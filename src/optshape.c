@@ -245,8 +245,9 @@ typedef struct {
   int col;
 } partial_shape;
 
-static void add_comp(partial_shape *ps, ivector *out0, ivector *inn0,
-		     int c0, int r0t, int r0b, int c1, int r1t, int r1b)
+static void
+_add_comp(partial_shape *ps, ivector *out0, ivector *inn0,
+          int c0, int r0t, int r0b, int c1, int r1t, int r1b)
 {
   int x, y0, y1, z, r, c, len0;
   x = ps->top + ps->rows + r1t - r1b;
@@ -455,7 +456,7 @@ int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
 	  c = iv_elem(cont,0);
 	  while (r < clen && iv_elem(cont,r) == c)
 	    r++;
-	  add_comp(&ps, cont,NULL, 0,0,clen, c,0,r);
+	  _add_comp(&ps, cont,NULL, 0,0,clen, c,0,r);
 	}
 
       if (r1t == r2t && comp_size > cont_size)
@@ -480,7 +481,7 @@ int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
 	}
       else if (comp_size > 0)
 	{
-	  add_comp(&ps, outer,inner, c1,r1t,r1b, c2,r2t,r2b);
+	  _add_comp(&ps, outer,inner, c1,r1t,r1b, c2,r2t,r2b);
 	}
 
       c2 = c1;

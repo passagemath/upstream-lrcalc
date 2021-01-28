@@ -11,7 +11,7 @@
 #include "schublib.h"
 
 
-int _trans(ivector *w, int vars, ivlincomb *res);
+static int _trans(ivector *w, int vars, ivlincomb *res);
 
 ivlincomb *trans(ivector *w, int vars)
 {
@@ -26,7 +26,7 @@ ivlincomb *trans(ivector *w, int vars)
   return res;
 }
 
-int _trans(ivector *w, int vars, ivlincomb *res)
+static int _trans(ivector *w, int vars, ivlincomb *res)
 {
   ivlincomb *tmp;
   ivlc_iter itr;
@@ -36,17 +36,16 @@ int _trans(ivector *w, int vars, ivlincomb *res)
   ivlc_reset(res);
 
   nw = iv_length(w);
-  n = nw;
-  while (n > 1 && iv_elem(w, n-1) == n)
-    n--;
+  n = perm_group(w);
   w->length = n;
 
   r = n-1;
   while (r > 0 && iv_elem(w, r-1) < iv_elem(w, r))
     r--;
-  if (r == 0)
+  if (r <= 0)
     {
       ivector *xx = iv_new_zero(vars ? vars : 1);
+      w->length = nw;
       if (xx == NULL)
         return -1;
       if (ivlc_insert(res, xx, iv_hash(xx), 1) == NULL)
@@ -54,7 +53,6 @@ int _trans(ivector *w, int vars, ivlincomb *res)
           iv_free(xx);
           return -1;
         }
-      w->length = nw;
       return 0;
     }
   if (vars < r)
@@ -73,7 +71,10 @@ int _trans(ivector *w, int vars, ivlincomb *res)
 
   tmp = trans(v, vars);
   if (tmp == NULL)
-    return -1;
+    {
+      w->length = nw;
+      return -1;
+    }
   for (ivlc_first(tmp, &itr); ivlc_good(&itr); ivlc_next(&itr))
     {
       ivector *xx = ivlc_key(&itr);
@@ -83,6 +84,7 @@ int _trans(ivector *w, int vars, ivlincomb *res)
       if (ivlc_insert(res, xx, hash, ivlc_value(&itr)) == NULL)
         {
           ivlc_free_all(tmp);
+          w->length = nw;
           return -1;
         }
     }
@@ -104,6 +106,7 @@ int _trans(ivector *w, int vars, ivlincomb *res)
           if (ok != 0)
             {
               ivlc_free_all(tmp);
+              w->length = nw;
               return -1;
             }
           iv_elem(v, i-1) = vi;
@@ -119,13 +122,15 @@ int _trans(ivector *w, int vars, ivlincomb *res)
 }
 
 
-int _monk_add(int i, ivlincomb *slc, int rank, ivlincomb *res);
+static int _monk_add(int i, ivlincomb *slc, int rank, ivlincomb *res);
 
 ivlincomb *monk(int i, ivlincomb *slc, int rank)
 {
   ivlincomb *res = ivlc_new(IVLC_HASHTABLE_SZ, IVLC_ARRAY_SZ);
   if (res == NULL)
     return NULL;
+  if (rank == 0)
+    rank = (((unsigned) -1) >> 1);
   if (_monk_add(i, slc, rank, res) != 0)
     {
       ivlc_free_all(res);
@@ -134,7 +139,7 @@ ivlincomb *monk(int i, ivlincomb *slc, int rank)
   return res;
 }
 
-int _monk_add(int i, ivlincomb *slc, int rank, ivlincomb *res)
+static int _monk_add(int i, ivlincomb *slc, int rank, ivlincomb *res)
 {
   ivlc_iter itr;
 
@@ -234,8 +239,9 @@ int _monk_add(int i, ivlincomb *slc, int rank, ivlincomb *res)
 }
 
 
-int _mult_ps(void **poly, int n, int maxvar, ivector *perm, int rank,
-             ivlincomb *res);
+static int
+_mult_ps(void **poly, int n, int maxvar, ivector *perm, int rank,
+         ivlincomb *res);
 
 ivlincomb *mult_poly_schubert(ivlincomb *poly, ivector *perm, int rank)
 {
@@ -246,6 +252,9 @@ ivlincomb *mult_poly_schubert(ivlincomb *poly, ivector *perm, int rank)
   n = ivlc_card(poly);
   if (n == 0)
     return poly;
+
+  if (rank == 0)
+    rank = (((unsigned) -1) >> 1);
 
   p = (void **) ml_malloc(2 * n * sizeof(void *));
   if (p == NULL)
@@ -288,8 +297,9 @@ ivlincomb *mult_poly_schubert(ivlincomb *poly, ivector *perm, int rank)
   return poly;
 }
 
-int _mult_ps(void **poly, int n, int maxvar, ivector *perm, int rank,
-             ivlincomb *res)
+static int
+_mult_ps(void **poly, int n, int maxvar, ivector *perm, int rank,
+         ivlincomb *res)
 {
   int i, j, c, lnxx, mv0, mv1, ok;
   ivlincomb *res1;
