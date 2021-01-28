@@ -106,20 +106,20 @@ oomtest ../src/schubmult -s -m 0 1 2 0 1 2 - 0 1 2 0 1 2
 oomtest ../src/schubmult -s -m 0 2 1 3 1 0 3 2 - 1 2 0 2 1 3 0 3
 oomtest ../src/schubmult -s 0 2 1 3 1 0 3 2 3 - 1 2 0 2 3 3 1 0 3
 
-oomtest ../src/tst_allperms 0
-oomtest ../src/tst_allperms 1
-oomtest ../src/tst_allperms 2
-oomtest ../src/tst_allperms 3
-oomtest ../src/tst_allperms 4
+oomtest ../src/allperms 0
+oomtest ../src/allperms 1
+oomtest ../src/allperms 2
+oomtest ../src/allperms 3
+oomtest ../src/allperms 4
 
-oomtest ../src/tst_allstr 0
-oomtest ../src/tst_allstr 0 0 0 0
-oomtest ../src/tst_allstr 1
-oomtest ../src/tst_allstr 0 0 0 1 1 1 1 2 2 2
-oomtest ../src/tst_allstr 0 0 3 3 3 3 4 4 6 6
+oomtest ../src/allstrings 0
+oomtest ../src/allstrings 0 0 0 0
+oomtest ../src/allstrings 1
+oomtest ../src/allstrings 0 0 0 1 1 1 1 2 2 2
+oomtest ../src/allstrings 0 0 3 3 3 3 4 4 6 6
 
-oomtest ../src/tst_partiter 1 1
-oomtest ../src/tst_partiter 2 1
-oomtest ../src/tst_partiter 1 2
-oomtest ../src/tst_partiter 3 2
-oomtest ../src/tst_partiter 2 3
+oomtest ../src/test_partiter 1 1
+oomtest ../src/test_partiter 2 1
+oomtest ../src/test_partiter 1 2
+oomtest ../src/test_partiter 3 2
+oomtest ../src/test_partiter 2 3

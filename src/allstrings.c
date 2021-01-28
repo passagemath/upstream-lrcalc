@@ -16,11 +16,11 @@ extern char *optarg;
 #include "ivlincomb.h"
 
 
-#define PROGNAME "tst_allperms"
+#define PROGNAME "allstrings"
 
 void print_usage()
 {
-  fprintf(stderr, "usage: " PROGNAME " rank\n");
+  fprintf(stderr, "usage: " PROGNAME " dimvec\n");
   exit(1);
 }
 
@@ -34,24 +34,29 @@ void out_of_memory()
 
 int main(int ac, char **av)
 {
-  int n, i;
+  ivector *dv;
   ivlist *lst;
+  int i;
 
   alloc_getenv();
 
-  if (ac != 2)
+  dv = get_vect_arg(ac, av);
+  if (dv == NULL)
     print_usage();
-  n = atoi(av[1]);
-  if (n < 0)
+  if (dimvec_valid(dv) == 0)
     print_usage();
 
-  lst = all_perms(n);
+  lst = all_strings(dv);
   if (lst == NULL)
-    out_of_memory();
+    {
+      iv_free(dv);
+      out_of_memory();
+    }
 
   for (i = 0; i < ivl_length(lst); i++)
     iv_printnl(ivl_elem(lst, i));
 
+  iv_free(dv);
   ivl_free_all(lst);
   alloc_report();
 }

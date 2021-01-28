@@ -16,7 +16,7 @@
 #include "schublib.h"
 
 
-#define PROGNAME "tst_lrcoef"
+#define PROGNAME "test_lrcoef"
 
 void print_usage()
 {

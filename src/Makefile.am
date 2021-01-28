@@ -1,17 +1,18 @@
 bin_PROGRAMS = lrcalc schubmult
-check_PROGRAMS = tst_allparts tst_partiter tst_allperms tst_allstr \
-  tst_schubmult tst_lrmult tst_lrcoef
+check_PROGRAMS = allparts allperms allstrings \
+  test_partiter test_schubmult test_lrmult test_lrcoef
 
 lrcalc_LDADD = liblrcalc.la
 schubmult_LDADD = liblrcalc.la
 
-tst_allparts_LDADD = liblrcalc.la
-tst_partiter_LDADD = liblrcalc.la
-tst_allperms_LDADD = liblrcalc.la
-tst_allstr_LDADD = liblrcalc.la
-tst_schubmult_LDADD = liblrcalc.la
-tst_lrmult_LDADD = liblrcalc.la
-tst_lrcoef_LDADD = liblrcalc.la
+allparts_LDADD = liblrcalc.la
+allperms_LDADD = liblrcalc.la
+allstrings_LDADD = liblrcalc.la
+
+test_partiter_LDADD = liblrcalc.la
+test_schubmult_LDADD = liblrcalc.la
+test_lrmult_LDADD = liblrcalc.la
+test_lrcoef_LDADD = liblrcalc.la
 
 lib_LTLIBRARIES = liblrcalc.la
 liblrcalc_la_SOURCES = alloc.c ilist.c ivector.c ivlincomb.c ivlist.c \

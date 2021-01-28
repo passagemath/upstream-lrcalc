@@ -15,7 +15,7 @@
 #include "schublib.h"
 
 
-#define PROGNAME "tst_schubmult"
+#define PROGNAME "test_schubmult"
 
 void print_usage()
 {

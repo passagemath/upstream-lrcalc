@@ -12,7 +12,7 @@ extern char *optarg;
 #include "part.h"
 
 
-#define PROGNAME "tst_allparts"
+#define PROGNAME "allparts"
 
 void print_usage()
 {

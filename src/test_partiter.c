@@ -11,7 +11,7 @@
 #include "part.h"
 
 
-#define PROGNAME "tst_partiter"
+#define PROGNAME "test_partiter"
 
 
 void out_of_memory()

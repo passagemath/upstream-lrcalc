@@ -16,7 +16,7 @@
 #include "schublib.h"
 
 
-#define PROGNAME "tst_lrmult"
+#define PROGNAME "test_lrmult"
 
 void print_usage()
 {
