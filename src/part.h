@@ -119,6 +119,7 @@ typedef struct {
   ivector *part;
   ivector *outer;
   ivector *inner;
+  int length;
   int rows;
   int opt;
 } part_iter;
@@ -164,7 +165,8 @@ INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
 	rows--;
     }
   itr->rows = rows;
-  iv_length(p) = rows;
+  itr->length = rows;
+  iv_set_zero(p);
 
   if (use_inner)
     {
@@ -203,7 +205,7 @@ INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
 	    }
 	  if (avail == 0)
 	    {
-	      iv_length(p) = r;
+	      itr->length = r;
 	      return 0;
 	    }
 	  if (c > avail)
@@ -216,7 +218,7 @@ INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
   if (use_size && size > 0)
     goto empty_result;
 
-  iv_length(p) = r;
+  itr->length = r;
   return 0;
 
  empty_result:
@@ -276,7 +278,7 @@ INLINE void pitr_between_sz_first(part_iter *itr, ivector *p,
 
 INLINE void pitr_next(part_iter *itr)
 {
-  int size, inner_sz, outer_sz, outer_row, r, c;
+  int size, inner_sz, outer_sz, outer_row, r, c, j;
 
   ivector *p = itr->part;
   ivector *outer = itr->outer;
@@ -296,7 +298,7 @@ INLINE void pitr_next(part_iter *itr)
       outer_sz = 0;   /* number of boxes in outer[outer_row..] */
     }
 
-  for (r = iv_length(p) - 1; r >= 0; r--)
+  for (r = itr->length - 1; r >= 0; r--)
     {
       if (use_size)
 	size += iv_elem(p, r);
@@ -324,11 +326,12 @@ INLINE void pitr_next(part_iter *itr)
       /* can decrease iv_elem(p, r). */
       if (c == 0)
 	{
-	  iv_length(p) = r;
+          iv_elem(p, r) = 0;
+          itr->length = r;
 	  return;
 	}
 
-      iv_length(p) = rows;
+      itr->length = rows;
       for (; r < outer_row; r++)
 	{
 	  if ((! use_size) && use_outer && c > iv_elem(outer, r))
@@ -369,7 +372,9 @@ INLINE void pitr_next(part_iter *itr)
 	      }
 	    iv_elem(p, r) = c;
 	  }
-      iv_length(p) = r;
+      for (j = r; j < itr->length; j++)
+        iv_elem(p, j) = 0;
+      itr->length = r;
       return;
     }
   itr->rows = -1;
