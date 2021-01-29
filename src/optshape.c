@@ -574,7 +574,10 @@ int optim_coef(skew_shape *ss, ivector *out, ivector *sh1, ivector *sh2)
     iv_elem(la, Nla-1) = 0;
   for (r = Nla-1; r >= 0; r--)
     {
-      iv_elem(la, r) = iv_elem(sh1, r);
+      int x = iv_elem(sh1, r);
+      iv_elem(la, r) = x;
+      if (iv_elem(nu, r) < x)
+        goto coef_zero;
       sum -= iv_elem(la, r);
     }
 
@@ -584,7 +587,10 @@ int optim_coef(skew_shape *ss, ivector *out, ivector *sh1, ivector *sh2)
     iv_elem(mu, Nmu-1) = 0;
   for (r = Nmu-1; r >= 0; r--)
     {
-      iv_elem(mu, r) = iv_elem(sh2, r);
+      int x = iv_elem(sh2, r);
+      iv_elem(mu, r) = x;
+      if (iv_elem(nu, r) < x)
+        goto coef_zero;
       sum -= iv_elem(mu, r);
     }
 
