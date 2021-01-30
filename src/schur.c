@@ -140,21 +140,81 @@ ivlincomb *schur_mult_fusion(ivector *sh1, ivector *sh2, int rows, int level)
 {
   skew_shape ss;
   ivlincomb *lc;
+  ivector *nsh1, *nsh2, *tmp;
+  int sign, i;
+
+  claim(part_valid(sh1) && part_valid(sh2));
+  if (part_entry(sh1, rows) != 0 || part_entry(sh2, rows) != 0)
+    return ivlc_new(5, 2);
+
+  nsh1 = nsh2 = tmp = NULL;
+  lc = NULL;
+
+  sign = 1;
+  if (part_entry(sh1, 0) - part_entry(sh1, rows - 1) > level)
+    {
+      tmp = iv_new(rows);
+      if (tmp == NULL) goto free_return;
+      nsh1 = iv_new(rows);
+      if (nsh1 == NULL) goto free_return;
+      for (i = 0; i < rows; i++)
+        iv_elem(nsh1, i) = part_entry(sh1, i);
+      sh1 = nsh1;
+      sign = fusion_reduce(sh1, rows, tmp);
+    }
+  if (sign == 0)
+    {
+      lc = ivlc_new(5, 2);
+      goto free_return;
+    }
+  if (part_entry(sh2, 0) - part_entry(sh2, rows - 1) > level)
+    {
+      if (tmp == NULL)
+        tmp = iv_new(rows);
+      if (tmp == NULL) goto free_return;
+      nsh2 = iv_new(rows);
+      if (nsh2 == NULL) goto free_return;
+      for (i = 0; i < rows; i++)
+        iv_elem(nsh2, i) = part_entry(sh2, i);
+      sh2 = nsh2;
+      sign *= fusion_reduce(sh2, rows, tmp);
+    }
+  if (sign == 0)
+    {
+      lc = ivlc_new(5, 2);
+      goto free_return;
+    }
+
   if (optim_fusion(&ss, sh1, sh2, rows, level) != 0)
-    return NULL;
+    goto free_return;
   if (ss.sign)
     lc = lrit_expand(ss.outer, NULL, ss.cont, rows, -1, rows);
   else
     lc = ivlc_new(5, 2);
   sksh_dealloc(&ss);
-  if (lc == NULL)
-    return NULL;
+  if (lc == NULL) goto free_return;
 
   if (fusion_reduce_lc(lc, rows, level) != 0)
     {
       ivlc_free_all(lc);
-      return NULL;
+      lc = NULL;
+      goto free_return;
     }
+
+  if (sign < 0)
+    {
+      ivlc_iter itr;
+      for (ivlc_first(lc, &itr); ivlc_good(&itr); ivlc_next(&itr))
+        {
+          ivlc_keyval_t *kv = ivlc_keyval(&itr);
+          kv->value = - kv->value;
+        }
+    }
+
+ free_return:
+  if (tmp) iv_free(tmp);
+  if (nsh1) iv_free(nsh1);
+  if (nsh2) iv_free(nsh2);
   return lc;
 }
 
