@@ -98,7 +98,9 @@ check "src/test_schubmult 1" "success"
 check "src/test_schubmult 2" "success"
 check "src/test_schubmult 4" "success"
 
-check "src/test_lrmult 2 2" "success"
+check "src/test_lrmult 2 4" "success"
+check "src/test_lrmult 3 3" "success"
+check "src/test_lrmult 4 2" "success"
 
 check "src/test_lrcoef 4 4" "success"
 

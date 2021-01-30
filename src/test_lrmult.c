@@ -118,7 +118,7 @@ int test_schur_mult(ivector *p1, ivector *p2)
   ivlincomb *prd_s, *prd, *prd_sm, *prd_gb;
   int rows, cols, r, c;
 
-  rows = iv_length(p1) + iv_length(p2);
+  rows = part_length(p1) + part_length(p2);
   cols = part_entry(p1, 0) + part_entry(p2, 0);
 
   s1 = s2 = NULL;
