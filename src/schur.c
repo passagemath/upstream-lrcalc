@@ -130,7 +130,7 @@ int fusion_reduce_lc(ivlincomb *lc, int level)
  free_return:
   if (tmp != NULL) iv_free(tmp);
   if (coefs != NULL) il_free(coefs);
-  if (parts != NULL) ivl_free(parts);
+  if (parts != NULL) ivl_free_all(parts);
   return ok;
 }
 

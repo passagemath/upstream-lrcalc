@@ -98,4 +98,16 @@ check "src/test_schubmult 1" "success"
 check "src/test_schubmult 2" "success"
 check "src/test_schubmult 4" "success"
 
+check "src/test_lrmult 2 2" "success"
+
+check "src/test_lrcoef 4 4" "success"
+
+check "src/test_lrskew 4 4" "success"
+
+check "src/test_fusion 0 5" "success"
+check "src/test_fusion 1 5" "success"
+check "src/test_fusion 2 5" "success"
+check "src/test_fusion 3 5" "success"
+check "src/test_fusion 4 5" "success"
+
 exit $failed
