@@ -91,7 +91,7 @@ void mult_main(int ac, char **av)
         if (p == NULL || *p != ',')
           cmd_usage(&mult_usage);
         opt_cols = atoi(p + 1);
-        if (opt_rows <= 0 || opt_cols <= 0)
+        if (opt_rows < 0 || opt_cols < 0)
           cmd_usage(&mult_usage);
         break;
 
