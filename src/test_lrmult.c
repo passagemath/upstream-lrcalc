@@ -123,7 +123,7 @@ int test_schur_mult(ivector *p1, ivector *p2)
 
   s1 = s2 = NULL;
   prd_s = prd = prd_sm = prd_gb = NULL;
-  
+
   s1 = part2string(p1, rows, cols);
   if (! s1) goto out_of_mem;
   s2 = part2string(p2, rows, cols);
@@ -176,7 +176,7 @@ int main(int ac, char **av)
   int rows, cols;
   ivector *p1, *p2;
   part_iter itr1, itr2;
-  
+
   alloc_getenv();
 
   if (ac != 3)

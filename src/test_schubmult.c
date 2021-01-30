@@ -66,7 +66,7 @@ int test_mult_schubert(ivector *w1, ivector *w2)
   if (poly == NULL) goto out_of_mem;
   prd12 = mult_poly_schubert(poly, w2, 0);
   if (prd12 == NULL) goto out_of_mem;
-  
+
   poly = trans(w2, 0);
   if (poly == NULL) goto out_of_mem;
   prd21 = mult_poly_schubert(poly, w1, 0);

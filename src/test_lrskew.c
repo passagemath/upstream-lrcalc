@@ -110,7 +110,7 @@ int main(int ac, char **av)
   int rows, cols;
   ivector *out, *inn;
   part_iter itr1, itr2;
-  
+
   alloc_getenv();
 
   if (ac != 3)

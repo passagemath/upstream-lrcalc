@@ -41,7 +41,7 @@ int test_schur_lrcoef(ivector *p1, ivector *p2, int rows, int cols)
   prd = NULL;
   outer = iv_new(rows);
   if (! outer) goto out_of_mem;
-  
+
   prd = schur_mult(p1, p2, rows, cols, rows);
   if (! prd) goto out_of_mem;
 
@@ -71,7 +71,7 @@ int main(int ac, char **av)
   int rows, cols;
   ivector *p1, *p2;
   part_iter itr1, itr2;
-  
+
   alloc_getenv();
 
   if (ac != 3)

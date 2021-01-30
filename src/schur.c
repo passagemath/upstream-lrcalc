@@ -36,6 +36,7 @@ int fusion_reduce(ivector *la, int level, ivector *tmp)
 {
   int rows, n, q, i, j, k, a, b, sign;
 
+  claim(iv_length(la) == iv_length(tmp));
   rows = iv_length(la);
   n = rows + level;
 
@@ -74,45 +75,45 @@ int fusion_reduce(ivector *la, int level, ivector *tmp)
         return 0;
       k = i + q;
       a = iv_elem(tmp, i) + k + (k / rows) * level;
-      iv_elem(la, k % rows) = a;
+      iv_elem(la, (k + rows) % rows) = a;
     }
 
   return (sign & 1) ? -1 : 1;
 }
 
 
-int fusion_reduce_lc(ivlincomb *lc, int rows, int level)
+int fusion_reduce_lc(ivlincomb *lc, int level)
 {
   ivlc_iter itr;
   ivlist *parts;
   ilist *coefs;
   ivector *sh, *tmp;
-  int i, c, sign;
+  int i, c, sign, ok;
 
-  tmp = iv_new(rows);
-  if (tmp == NULL)
-    return -1;
+  parts = NULL;
+  coefs = NULL;
+  tmp = NULL;
+  ok = -1;
 
   /* Copy linear combination to lists. */
   parts = ivl_new(ivlc_card(lc));
-  if (parts == NULL)
-    {
-      iv_free(tmp);
-      return -1;
-    }
+  if (parts == NULL) goto free_return;
   coefs = il_new(ivlc_card(lc));
-  if (coefs == NULL)
-    {
-      iv_free(tmp);
-      ivl_free(parts);
-      return -1;
-    }
+  if (coefs == NULL) goto free_return;
+
   for (ivlc_first(lc, &itr); ivlc_good(&itr); ivlc_next(&itr))
     {
       ivl_append(parts, ivlc_key(&itr));
       il_append(coefs, ivlc_value(&itr));
     }
   ivlc_reset(lc);
+
+  if (ivl_length(parts) > 0)
+    {
+      sh = ivl_elem(parts, 0);
+      tmp = iv_new(iv_length(sh));
+      if (tmp == NULL) goto free_return;
+    }
 
   /* Reduce and reinsert terms. */
   for (i = 0; i < ivl_length(parts); i++)
@@ -122,17 +123,15 @@ int fusion_reduce_lc(ivlincomb *lc, int rows, int level)
       sign = fusion_reduce(sh, level, tmp);
       if (ivlc_add_element(lc, sign * c, sh, iv_hash(sh),
                            LC_FREE_KEY | LC_FREE_ZERO) != 0)
-        {
-          iv_free(tmp);
-          il_free(coefs);
-          ivl_free_all(parts);
-          return -1;
-        }
+        goto free_return;
     }
-  iv_free(tmp);
-  il_free(coefs);
-  ivl_free(parts);
-  return 0;
+  ok = 0;
+
+ free_return:
+  if (tmp != NULL) iv_free(tmp);
+  if (coefs != NULL) il_free(coefs);
+  if (parts != NULL) ivl_free(parts);
+  return ok;
 }
 
 
@@ -160,7 +159,7 @@ ivlincomb *schur_mult_fusion(ivector *sh1, ivector *sh2, int rows, int level)
       for (i = 0; i < rows; i++)
         iv_elem(nsh1, i) = part_entry(sh1, i);
       sh1 = nsh1;
-      sign = fusion_reduce(sh1, rows, tmp);
+      sign = fusion_reduce(sh1, level, tmp);
     }
   if (sign == 0)
     {
@@ -177,7 +176,7 @@ ivlincomb *schur_mult_fusion(ivector *sh1, ivector *sh2, int rows, int level)
       for (i = 0; i < rows; i++)
         iv_elem(nsh2, i) = part_entry(sh2, i);
       sh2 = nsh2;
-      sign *= fusion_reduce(sh2, rows, tmp);
+      sign *= fusion_reduce(sh2, level, tmp);
     }
   if (sign == 0)
     {
@@ -194,7 +193,7 @@ ivlincomb *schur_mult_fusion(ivector *sh1, ivector *sh2, int rows, int level)
   sksh_dealloc(&ss);
   if (lc == NULL) goto free_return;
 
-  if (fusion_reduce_lc(lc, rows, level) != 0)
+  if (fusion_reduce_lc(lc, level) != 0)
     {
       ivlc_free_all(lc);
       lc = NULL;
