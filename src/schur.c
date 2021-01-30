@@ -88,7 +88,7 @@ int fusion_reduce_lc(ivlincomb *lc, int level)
   ivlist *parts;
   ilist *coefs;
   ivector *sh, *tmp;
-  int i, c, sign, ok;
+  int c, sign, ok;
 
   parts = NULL;
   coefs = NULL;
@@ -116,10 +116,10 @@ int fusion_reduce_lc(ivlincomb *lc, int level)
     }
 
   /* Reduce and reinsert terms. */
-  for (i = 0; i < ivl_length(parts); i++)
+  while (ivl_length(parts) != 0)
     {
-      sh = ivl_elem(parts, i);
-      c = il_elem(coefs, i);
+      sh = ivl_poplast(parts);
+      c = il_poplast(coefs);
       sign = fusion_reduce(sh, level, tmp);
       if (ivlc_add_element(lc, sign * c, sh, iv_hash(sh),
                            LC_FREE_KEY | LC_FREE_ZERO) != 0)
