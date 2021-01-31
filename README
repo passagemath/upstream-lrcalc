@@ -1,4 +1,4 @@
-Littlewood-Richardson Calculator version 1.3
+Littlewood-Richardson Calculator version 2.0
 Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 
 
@@ -14,18 +14,21 @@ This project uses the standard installation procedure:
     make
     sudo make install
 
-The last step is optional and installs the programs 
+The last step is optional and installs the programs
 
     lrcalc  and  schubmult
 
 in the directory /usr/local/bin, as well as the maple interface
 lrcalc.maple in /usr/local/share/lrcalc.  It also installs the lrcalc
-library and header files.  (The directory /usr/local can be changed,
-see the file INSTALL for details.)
+library and header files.  (The prefix /usr/local can be changed, see
+the file INSTALL for details.)
 
-You may want to further run the test suite:
+On some Linux distributions you need to set the environment variable
+LD_LIBRARY_PATH to load shared libraries installed in /usr/local/lib.
+If you use Bash, then this can be done by adding the following line to
+the file $HOME/.bashrc and starting a new shell:
 
-    make check
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 Notice also that the Littlewood-Richardson Calculator is now
 integrated in the SAGE open-source mathematics system.  You may prefer
@@ -66,9 +69,9 @@ coefficient in front.
 Example:
 
 % lrcalc skew 3 2 1 / 2 1
+2  (2,1)
+1  (1,1,1)
 1  (3)
-2  (2, 1)
-1  (1, 1, 1)
 
 
 lrcalc mult:  Expand a product of two Schur functions in the basis of
@@ -81,13 +84,13 @@ coefficient in front.
 Example:
 
 % lrcalc mult 2 1 - 2 1
-1  (3, 3)
-1  (4, 2)
-1  (2, 2, 1, 1)
-1  (2, 2, 2)
-2  (3, 2, 1)
-1  (4, 1, 1)
-1  (3, 1, 1, 1)
+2  (3,2,1)
+1  (4,2)
+1  (3,1,1,1)
+1  (3,3)
+1  (2,2,1,1)
+1  (2,2,2)
+1  (4,1,1)
 
 
 The option -r <rows> can be used to limit the partitions in the output
@@ -104,15 +107,15 @@ Example:
 
 % lrcalc mult -q 3,2 3 2 1 - 3 2 1
 1  (2)
-1  (1, 1)
+1  (1,1)
 
 % lrcalc mult -f 3,2 3 2 1 - 3 2 1
-1  (4, 4, 4)
-1  (5, 4, 3)
+1  (4,4,4)
+1  (5,4,3)
 
 
 lrcalc coprod:  Calculate coproducts in the ring of symmetric
--------------   functions.  
+-------------   functions.
 
 The command "lrcalc coprod z" lists all pairs of partitions x and y
 for which the Littlewood-Richardson coefficient c^z_{x,y} is non-zero,
@@ -121,20 +124,19 @@ with that coefficient in front.
 Example:
 
 % lrcalc coprod 3 2 1
-
-1  (3, 1)  (2)
-1  (2, 2)  (1, 1)
-1  (3, 1)  (1, 1)
-1  (2, 1)  (3)
-2  (2, 1)  (2, 1)
-1  (2, 2, 1)  (1)
-1  (3, 2, 1)  ()
-1  (3, 2)  (1)
-1  (2, 1, 1)  (2)
-1  (3, 1, 1)  (1)
-1  (1, 1, 1)  (2, 1)
-1  (2, 1, 1)  (1, 1)
-1  (2, 2)  (2)
+1  (2,1,1)  (1,1)
+1  (3,2,1)  ()
+1  (3,1,1)  (1)
+1  (2,2)  (1,1)
+2  (2,1)  (2,1)
+1  (3,2)  (1)
+1  (3,1)  (2)
+1  (1,1,1)  (2,1)
+1  (2,2,1)  (1)
+1  (2,1,1)  (2)
+1  (2,2)  (2)
+1  (2,1)  (3)
+1  (3,1)  (1,1)
 
 
 schubmult:  Expand a product of two Schubert polynomials in the basis
@@ -143,8 +145,16 @@ schubmult:  Expand a product of two Schubert polynomials in the basis
 Example:
 
 % schubmult 1 3 2 - 1 3 2
-1  (1, 4, 2, 3)
-1  (2, 3, 1)
+1  (2,3,1)
+1  (1,4,2,3)
+
+
+The option -s tells schubmult to use "string" notation:
+
+% schubmult -s 0 1 0 2 1 - 1 0 1 0 2
+1  (1,1,0,2,0)
+1  (1,2,0,0,1)
+1  (1,0,2,1,0)
 
 
 MAPLE INTERFACE
@@ -155,7 +165,7 @@ provides an interface between the above C programs and Maple.  It
 allows you to combine the notational convenience of Maple with the
 speed of C programs.
 
-To use the interface, simply type 
+To use the interface, simply type
 
     read "/usr/local/share/lrcalc/lrcalc.maple";
 
@@ -195,11 +205,10 @@ s[3, 3] + s[4, 2] + s[2, 2, 1, 1] + s[2, 2, 2] + 2 s[3, 2, 1] + s[4, 1, 1]
      + s[3, 1, 1, 1]
 
 > lrcoef( s[12,11,10,9,8,7,6,5,4,3,2,1],\
->  s[8,7,6,5,4,3,2,1], s[8,7,6,6,5,4,3,2,1]);
+  s[8,7,6,5,4,3,2,1], s[8,7,6,6,5,4,3,2,1]);
                                     7869992
 
 
 Enjoy!
 
-Anders S. Buch  (July 16, 2014)
-
+Anders S. Buch  (January 27, 2021)

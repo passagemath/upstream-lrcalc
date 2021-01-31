@@ -78,7 +78,7 @@ skew := proc(expr, shape)
     ERROR(`second argument must be a partition`, shape);
   fi;
   ee := tos(expr);
-  
+
   sh := _partlen(shape);
   if sh = 0 then
     RETURN(ee);
@@ -193,8 +193,8 @@ _mults2 := proc(expr)
 end:
 
 
-# quantum(rows, cols) and QUANTUM_OPTS are for doing calculations in 
-# the quantum cohomology ring of Gr(d,n) where d=rows and n=rows+cols, 
+# quantum(rows, cols) and QUANTUM_OPTS are for doing calculations in
+# the quantum cohomology ring of Gr(d,n) where d=rows and n=rows+cols,
 # rather than the ring of symmetric functions.
 
 quantum := proc(rows, cols)
@@ -229,7 +229,7 @@ _call_lrmult := proc(fac1, fac2)
   global QUANTUM_OPTS;
 
   cmd := cat(LRCALC_BIN_PATH, ` mult -m`, QUANTUM_OPTS,
-             seq(cat(` `, op(i,fac1)), i=1..nops(fac1)), ` -`, 
+             seq(cat(` `, op(i,fac1)), i=1..nops(fac1)), ` -`,
              seq(cat(` `, op(i,fac2)), i=1..nops(fac2)));
 
   fd := process[popen](cmd, READ);
