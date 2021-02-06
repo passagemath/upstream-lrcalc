@@ -48,3 +48,23 @@ cdef extern from "lrcalc/schublib.h":
     ivlincomb *monk(int i, ivlincomb *slc, int rank)
     ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
     ivlincomb *mult_schubert_str(ivector *str1, ivector *str2)
+
+
+cdef extern from "lrcalc/lriter.h":
+    ctypedef struct lrit_box:
+        int value
+        int max
+        int above
+        int right
+
+    ctypedef struct lrtab_iter:
+        ivector *cont
+        int size
+        int array_len
+        lrit_box array[1]
+
+    lrtab_iter *lrit_new(ivector *outer, ivector *inner, ivector *content,
+                         int maxrows, int maxcols, int partsz)
+    int lrit_good(lrtab_iter *lrit)
+    void lrit_next(lrtab_iter *lrit)
+    void lrit_free(lrtab_iter *lrit)

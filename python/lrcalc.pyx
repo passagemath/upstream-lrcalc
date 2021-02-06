@@ -1,3 +1,6 @@
+"""Python bindings for the Littlewood-Richardson Calculator."""
+
+
 from libc.stdint cimport int32_t, uint32_t
 from liblrcalc cimport *
 
@@ -62,6 +65,8 @@ cdef dict ivlc_dict_quantum(ivlincomb *lc, int level):
 
 
 def lrcoef(out, inn1, inn2):
+    """Compute a single Littlewood-Richardson coefficient."""
+
     cdef ivector *cout = NULL
     cdef ivector *cinn1 = NULL
     cdef ivector *cinn2 = NULL
@@ -80,6 +85,8 @@ def lrcoef(out, inn1, inn2):
 
 
 def mult(sh1, sh2, int rows=-1, int cols=-1):
+    """Compute the product of two Schur functions."""
+
     cdef ivector *csh1 = NULL
     cdef ivector *csh2 = NULL
     cdef ivlincomb *cprd = NULL
@@ -100,6 +107,8 @@ def mult(sh1, sh2, int rows=-1, int cols=-1):
 
 
 def mult_fusion(sh1, sh2, int rows, int level):
+    """Compute a product in the fusion ring of type A."""
+
     cdef ivector *csh1 = NULL
     cdef ivector *csh2 = NULL
     cdef ivlincomb *cprd = NULL
@@ -120,6 +129,8 @@ def mult_fusion(sh1, sh2, int rows, int level):
 
 
 def mult_quantum(sh1, sh2, int rows, int cols):
+    """Compute quantum product of Schubert classes on a Grassmannian."""
+
     cdef ivector *csh1 = NULL
     cdef ivector *csh2 = NULL
     cdef ivlincomb *cprd = NULL
@@ -140,6 +151,8 @@ def mult_quantum(sh1, sh2, int rows, int cols):
 
 
 def skew(outer, inner, int rows=-1):
+    """Compute the Schur expansion of a skew Schur function."""
+
     cdef ivector *cout = NULL
     cdef ivector *cinn = NULL
     cdef ivlincomb *cres = NULL
@@ -160,6 +173,8 @@ def skew(outer, inner, int rows=-1):
 
 
 def schubert_poly(w):
+    """Compute the Schubert polynomial of a permutation."""
+
     cdef ivector *cw = NULL
     cdef ivlincomb *cres = NULL
     try:
@@ -176,6 +191,8 @@ def schubert_poly(w):
 
 
 def schubmult(w1, w2, int rank=0):
+    """Compute the product of two Schubert polynomials."""
+
     cdef ivector *cw1 = NULL
     cdef ivector *cw2 = NULL
     cdef ivlincomb *cres = NULL
@@ -196,6 +213,8 @@ def schubmult(w1, w2, int rank=0):
 
 
 def schubmult_str(str1, str2):
+    """Compute product of Schubert polynomials using string notation."""
+
     cdef ivector *cs1 = NULL
     cdef ivector *cs2 = NULL
     cdef ivlincomb *cres = NULL
@@ -213,3 +232,40 @@ def schubmult_str(str1, str2):
             iv_free(cs2)
         if cs1 is not NULL:
             iv_free(cs1)
+
+
+cdef class lr_iterator:
+    """Iterate through column words of LR tableaux of given skew shape."""
+
+    cdef lrtab_iter *_itr
+
+    def __cinit__(self, outer, inner, int rows=-1):
+        cdef ivector *out = NULL
+        cdef ivector *inn = NULL
+        try:
+            out = iv_newpy(outer)
+            inn = iv_newpy(inner)
+            self._itr = lrit_new(out, inn, NULL, rows, -1, -1)
+            if self._itr is NULL:
+                raise MemoryError()
+        finally:
+            if inn is not NULL:
+                iv_free(inn)
+            if out is not NULL:
+                iv_free(out)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        cdef int i
+        if not lrit_good(self._itr):
+            raise StopIteration
+        word = tuple(self._itr.array[i].value
+                     for i in range(self._itr.size))
+        lrit_next(self._itr)
+        return word
+
+    def __dealloc(self):
+        if self._itr is not NULL:
+            lrit_free(self._itr)
