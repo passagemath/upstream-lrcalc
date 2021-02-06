@@ -1,7 +1,6 @@
 """Python bindings for the Littlewood-Richardson Calculator."""
 
 
-from libc.stdint cimport int32_t, uint32_t
 from liblrcalc cimport *
 
 cdef ivector *iv_newpy(pv):
@@ -60,6 +59,22 @@ cdef dict ivlc_dict_quantum(ivlincomb *lc, int level):
     ivlc_first(lc, &itr)
     while ivlc_good(&itr):
         res[iv_quantum(ivlc_key(&itr), level)] = ivlc_value(&itr)
+        ivlc_next(&itr)
+    return res
+
+
+cdef tuple iv_pair(ivector *v, int rows, int cols):
+    cdef int i;
+    p1 = tuple(v.array[i] - cols for i in range(rows) if v.array[i] != cols)
+    p2 = tuple(v.array[i] for i in range(rows, v.length) if v.array[i] != 0)
+    return (p1, p2)
+
+cdef dict ivlc_dict_pair(ivlincomb *lc, int rows, int cols):
+    cdef ivlc_iter itr
+    res = dict()
+    ivlc_first(lc, &itr)
+    while ivlc_good(&itr):
+        res[iv_pair(ivlc_key(&itr), rows, cols)] = ivlc_value(&itr)
         ivlc_next(&itr)
     return res
 
@@ -170,6 +185,29 @@ def skew(outer, inner, int rows=-1):
             iv_free(cinn)
         if cout is not NULL:
             iv_free(cout)
+
+
+def coprod(sh, bint all=False):
+    """Compute the coproduct of a Schur function."""
+
+    cdef ivector *csh = NULL
+    cdef ivlincomb *cres = NULL
+    cdef int rows, cols
+    try:
+        csh = iv_newpy(sh)
+        rows = csh.length
+        while rows > 0 and csh.array[rows - 1] == 0:
+            rows -= 1
+        cols = 0 if rows == 0 else csh.array[0]
+        cres = schur_coprod(csh, rows, cols, -1, all)
+        if cres is NULL:
+            raise MemoryError()
+        return ivlc_dict_pair(cres, rows, cols)
+    finally:
+        if cres is not NULL:
+            ivlc_free_all(cres)
+        if csh is not NULL:
+            iv_free(csh)
 
 
 def schubert_poly(w):
