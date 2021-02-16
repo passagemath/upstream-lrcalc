@@ -59,6 +59,63 @@ INLINE int dimvec_valid(ivector *dv)
   return 1;
 }
 
+/* Return 1 if w1 <= w2. */
+INLINE int bruhat_leq(ivector *w1, ivector *w2)
+{
+  int n, p, q, r1, r2;
+  n = perm_group(w1);
+  if (n > perm_group(w2))
+    return 0;
+  for (q = 1; q < n; q++)
+    {
+      r1 = 0;
+      r2 = 0;
+      for (p = 0; p < n-1; p++)
+        {
+          if (iv_elem(w1, p) <= q)
+            r1++;
+          if (iv_elem(w2, p) <= q)
+            r2++;
+          if (r1 < r2)
+            return 0;
+        }
+    }
+  return 1;
+}
+
+/* Return 1 if S_w1 * S_w2 = 0 in H^*(Fl(rank)). */
+INLINE int bruhat_zero(ivector *w1, ivector *w2, int rank)
+{
+  int n1, n2, p, q, q2, r1, r2;
+  n1 = perm_group(w1);
+  n2 = perm_group(w2);
+  if (n1 > rank || n2 > rank)
+    return 1;
+  if (n1 > n2)
+    {
+      ivector *tmp = w1;
+      w1 = w2;
+      w2 = tmp;
+      n1 = n2;
+    }
+  for (q = 1; q < n1; q++)
+    {
+      q2 = rank - q;
+      r1 = 0;
+      r2 = 0;
+      for (p = 0; p < n1-1; p++)
+        {
+          if (iv_elem(w1, p) <= q)
+            r1++;
+          if (iv_elem(w2, p) > q2)
+            r2++;
+          if (r1 < r2)
+            return 1;
+        }
+    }
+  return 0;
+}
+
 int str_iscompat(ivector *str1, ivector *str2);
 
 ivlist *all_strings(ivector *dimvec);
