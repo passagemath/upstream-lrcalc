@@ -363,6 +363,7 @@ ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
   ivector *tmp;
   int svlen1, svlen2, w1len, w2len, t;
 
+  lc = NULL;
   w1len = perm_length(w1);
   w2len = perm_length(w2);
   if (w1len > w2len)
@@ -391,21 +392,16 @@ ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
           || iv_length(w1) > rank
           || iv_length(w2) > rank)
         {
-          w1->length = svlen1;
-          w2->length = svlen2;
-          return ivlc_new(IVLC_HASHTABLE_SZ, IVLC_ARRAY_SZ);
+          lc = ivlc_new(IVLC_HASHTABLE_SZ, IVLC_ARRAY_SZ);
+          goto free_return;
         }
     }
 
   poly = trans(w1, 0);
-  if (poly == NULL)
-    {
-      w1->length = svlen1;
-      w2->length = svlen2;
-      return NULL;
-    }
+  if (poly == NULL) goto free_return;
   lc = mult_poly_schubert(poly, w2, rank);
 
+ free_return:
   w1->length = svlen1;
   w2->length = svlen2;
   return lc;
