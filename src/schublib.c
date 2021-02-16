@@ -363,7 +363,6 @@ ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
   ivector *tmp;
   int svlen1, svlen2, w1len, w2len, t;
 
-  lc = NULL;
   w1len = perm_length(w1);
   w2len = perm_length(w2);
   if (w1len > w2len)
@@ -380,21 +379,16 @@ ivlincomb *mult_schubert(ivector *w1, ivector *w2, int rank)
   svlen2 = iv_length(w2);
   w1->length = perm_group(w1);
   w2->length = perm_group(w2);
+  lc = NULL;
 
   if (rank == 0)
     {
       rank = (((unsigned) -1) >> 1);
     }
-  else
+  else if (2*(w1len + w2len) > rank*(rank-1) || bruhat_zero(w1, w2, rank))
     {
-      /* FIXME: one can say exactly when the product is zero. */
-      if (2 * (w1len + w2len) > rank * (rank - 1)
-          || iv_length(w1) > rank
-          || iv_length(w2) > rank)
-        {
-          lc = ivlc_new(IVLC_HASHTABLE_SZ, IVLC_ARRAY_SZ);
-          goto free_return;
-        }
+      lc = ivlc_new(IVLC_HASHTABLE_SZ, IVLC_ARRAY_SZ);
+      goto free_return;
     }
 
   poly = trans(w1, 0);
