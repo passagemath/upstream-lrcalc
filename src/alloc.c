@@ -109,11 +109,11 @@ static inline void alloc_print(char c, void *p, char *name)
 
 
 #define ALIGN 16
-#define HEAD_SPACE	3
-#define TAIL_SPACE	3
+#define HEAD_SPACE 3
+#define TAIL_SPACE 3
 
-#define ADD_TO_SIZE	((HEAD_SPACE + TAIL_SPACE) * ALIGN)
-#define ADD_TO_PTR	(HEAD_SPACE * ALIGN)
+#define ADD_TO_SIZE ((HEAD_SPACE + TAIL_SPACE) * ALIGN)
+#define ADD_TO_PTR (HEAD_SPACE * ALIGN)
 
 
 static void scramble_storage(void *p)
@@ -142,18 +142,18 @@ static void check_storage(void *p)
   for (idx = sizeof(size_t); idx < ADD_TO_PTR; idx++)
     if (s[idx] != 0xa5)
       {
-	fprintf(stderr, "WARNING: Pointer %zu (%p) dirty at index %zu.\n",
-		p - alloc_heap_base, p, idx);
-	claim(alloc_dirty_segfault == 0);
-	return;
+        fprintf(stderr, "WARNING: Pointer %zu (%p) dirty at index %zu.\n",
+                p - alloc_heap_base, p, idx);
+        claim(alloc_dirty_segfault == 0);
+        return;
       }
   for (idx = size + ADD_TO_PTR; idx < size + ADD_TO_SIZE; idx++)
     if (s[idx] != 0xa5)
       {
-	fprintf(stderr, "WARNING: Pointer %zu (%p) dirty at index %zu.\n",
-		p - alloc_heap_base, p, idx);
-	claim(alloc_dirty_segfault == 0);
-	return;
+        fprintf(stderr, "WARNING: Pointer %zu (%p) dirty at index %zu.\n",
+                p - alloc_heap_base, p, idx);
+        claim(alloc_dirty_segfault == 0);
+        return;
       }
 }
 
@@ -216,7 +216,7 @@ void alloc_test_oom(void (f)(void *), void *arg)
   if (alloc_memory_used != 0)
     {
       fprintf(stderr,
-	      "alloc_test_oom: non-zero memory balance on first run.\n");
+              "alloc_test_oom: non-zero memory balance on first run.\n");
       return;
     }
 
@@ -234,19 +234,19 @@ void alloc_test_oom(void (f)(void *), void *arg)
       f(arg);
 
       if (alloc_memory_used != 0)
-	{
-	  /* Leak found, segfault on n-th call. */
-	  alloc_reset();
-	  alloc_set_fail(n, 1);
-	  f(arg);
-	}
+        {
+          /* Leak found, segfault on n-th call. */
+          alloc_reset();
+          alloc_set_fail(n, 1);
+          f(arg);
+        }
       else
-	{
-	  /* segfault if alloc called after failed call. */
-	  alloc_reset();
-	  alloc_set_fail(n, 2);
-	  f(arg);
-	}
+        {
+          /* segfault if alloc called after failed call. */
+          alloc_reset();
+          alloc_set_fail(n, 2);
+          f(arg);
+        }
     }
   fprintf(stderr, "\nalloc_test_oom successful\n");
 }

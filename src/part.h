@@ -19,7 +19,7 @@ INLINE int part_valid(ivector *p)
     {
       y = iv_elem(p, i);
       if (y < x)
-	return 0;
+        return 0;
       x = iv_elem(p, i);
     }
   return 1;
@@ -134,7 +134,7 @@ INLINE int pitr_good(part_iter *itr)
 }
 
 INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
-		      ivector *outer, ivector *inner, int size, int opt)
+                      ivector *outer, ivector *inner, int size, int opt)
 {
   int inner_sz, r, c;
 
@@ -160,9 +160,9 @@ INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
   if (use_outer)
     {
       if (rows > iv_length(outer))
-	rows = iv_length(outer);
+        rows = iv_length(outer);
       while (rows > 0 && iv_elem(outer, rows - 1) == 0)
-	rows--;
+        rows--;
     }
   itr->rows = rows;
   itr->length = rows;
@@ -172,46 +172,46 @@ INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
     {
       claim(iv_length(inner) >= rows);
       if (iv_length(inner) > rows && iv_elem(inner, rows) != 0)
-	goto empty_result;
+        goto empty_result;
       if (rows > 0 && cols < iv_elem(inner, 0))
-	goto empty_result;
+        goto empty_result;
     }
 
   inner_sz = 0;
   if (use_size)
     {
       if (size > rows * cols)
-	goto empty_result;
+        goto empty_result;
       if (use_inner)
-	{
-	  inner_sz = iv_sum(inner);
-	  if (size < inner_sz)
-	    goto empty_result;
-	}
+        {
+          inner_sz = iv_sum(inner);
+          if (size < inner_sz)
+            goto empty_result;
+        }
     }
 
   for (r = 0; r < rows; r++)
     {
       c = cols;
       if (use_outer && c > iv_elem(outer, r))
-	c = iv_elem(outer, r);
+        c = iv_elem(outer, r);
       if (use_size)
-	{
-	  int avail = size;
-	  if (use_inner)
-	    {
-	      inner_sz -= iv_elem(inner, r);
-	      avail -= inner_sz;
-	    }
-	  if (avail == 0)
-	    {
-	      itr->length = r;
-	      return 0;
-	    }
-	  if (c > avail)
-	    c = avail;
-	  size -= c;
-	}
+        {
+          int avail = size;
+          if (use_inner)
+            {
+              inner_sz -= iv_elem(inner, r);
+              avail -= inner_sz;
+            }
+          if (avail == 0)
+            {
+              itr->length = r;
+              return 0;
+            }
+          if (c > avail)
+            c = avail;
+          size -= c;
+        }
       iv_elem(p, r) = c;
     }
 
@@ -227,7 +227,7 @@ INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
 }
 
 /* INLINE int pitr_first(part_iter *itr, ivector *p, int rows, int cols,
- *		         ivector *outer, ivector *inner, int size, int opt)
+ *                         ivector *outer, ivector *inner, int size, int opt)
  */
 
 INLINE void pitr_box_first(part_iter *itr, ivector *p, int rows, int cols)
@@ -236,7 +236,7 @@ INLINE void pitr_box_first(part_iter *itr, ivector *p, int rows, int cols)
 }
 
 INLINE void pitr_box_sz_first(part_iter *itr, ivector *p,
-			      int rows, int cols, int size)
+                              int rows, int cols, int size)
 {
   pitr_first(itr, p, rows, cols, NULL, NULL, size, PITR_USE_SIZE);
 }
@@ -249,30 +249,30 @@ INLINE void pitr_sub_first(part_iter *itr, ivector *p, ivector *outer)
 }
 
 INLINE void pitr_sub_sz_first(part_iter *itr, ivector *p,
-			      ivector *outer, int size)
+                              ivector *outer, int size)
 {
   int rows = iv_length(outer);
   int cols = (rows == 0) ? 0 : iv_elem(outer, 0);
   pitr_first(itr, p, rows, cols, outer, NULL, size,
-	     PITR_USE_OUTER | PITR_USE_SIZE);
+             PITR_USE_OUTER | PITR_USE_SIZE);
 }
 
 INLINE void pitr_between_first(part_iter *itr, ivector *p,
-			       ivector *outer, ivector *inner)
+                               ivector *outer, ivector *inner)
 {
   int rows = iv_length(outer);
   int cols = (rows == 0) ? 0 : iv_elem(outer, 0);
   pitr_first(itr, p, rows, cols, outer, inner, 0,
-	     PITR_USE_OUTER | PITR_USE_INNER);
+             PITR_USE_OUTER | PITR_USE_INNER);
 }
 
 INLINE void pitr_between_sz_first(part_iter *itr, ivector *p,
-				  ivector *outer, ivector *inner, int size)
+                                  ivector *outer, ivector *inner, int size)
 {
   int rows = iv_length(outer);
   int cols = (rows == 0) ? 0 : iv_elem(outer, 0);
   pitr_first(itr, p, rows, cols, outer, inner, size,
-	     PITR_USE_OUTER | PITR_USE_INNER | PITR_USE_SIZE);
+             PITR_USE_OUTER | PITR_USE_INNER | PITR_USE_SIZE);
 }
 
 
@@ -301,77 +301,77 @@ INLINE void pitr_next(part_iter *itr)
   for (r = itr->length - 1; r >= 0; r--)
     {
       if (use_size)
-	size += iv_elem(p, r);
+        size += iv_elem(p, r);
       if (use_size && use_inner)
-	inner_sz += iv_elem(inner, r);
+        inner_sz += iv_elem(inner, r);
 
       c = iv_elem(p, r) - 1;
 
       if (use_inner && c < iv_elem(inner, r))
-	continue;
+        continue;
 
       if (use_size && use_outer)
-	{
-	  /* update outer_row and outer_sz. */
-	  while (outer_row > 0 && iv_elem(outer, outer_row - 1) < c)
-	    {
-	      outer_row -= 1;
-	      outer_sz += iv_elem(outer, outer_row);
-	    }
-	}
+        {
+          /* update outer_row and outer_sz. */
+          while (outer_row > 0 && iv_elem(outer, outer_row - 1) < c)
+            {
+              outer_row -= 1;
+              outer_sz += iv_elem(outer, outer_row);
+            }
+        }
 
       if (use_size && size > c * (outer_row - r) + outer_sz)
-	continue;
+        continue;
 
       /* can decrease iv_elem(p, r). */
       if (c == 0)
-	{
+        {
           iv_elem(p, r) = 0;
           itr->length = r;
-	  return;
-	}
+          return;
+        }
 
       itr->length = rows;
       for (; r < outer_row; r++)
-	{
-	  if ((! use_size) && use_outer && c > iv_elem(outer, r))
-	    break;
-	  if (use_size)
-	    {
-	      int avail = size;
-	      if (use_inner)
-		{
-		  inner_sz -= iv_elem(inner, r);
-		  avail -= inner_sz;
-		}
-	      if (avail == 0)
-		break;
-	      if (c > avail)
-		c = avail;
-	      size -= c;
-	    }
-	  iv_elem(p, r) = c;
-	}
+        {
+          if ((! use_size) && use_outer && c > iv_elem(outer, r))
+            break;
+          if (use_size)
+            {
+              int avail = size;
+              if (use_inner)
+                {
+                  inner_sz -= iv_elem(inner, r);
+                  avail -= inner_sz;
+                }
+              if (avail == 0)
+                break;
+              if (c > avail)
+                c = avail;
+              size -= c;
+            }
+          iv_elem(p, r) = c;
+        }
       if (use_outer)
-	for (; r < rows; r++)
-	  {
-	    c = iv_elem(outer, r);
-	    if (use_size)
-	      {
-		int avail = size;
-		if (use_inner)
-		  {
-		    inner_sz -= iv_elem(inner, r);
-		    avail -= inner_sz;
-		  }
-		if (avail == 0)
-		  break;
-		if (c > avail)
-		  c = avail;
-		size -= c;
-	      }
-	    iv_elem(p, r) = c;
-	  }
+        for (; r < rows; r++)
+          {
+            c = iv_elem(outer, r);
+            if (use_size)
+              {
+                int avail = size;
+                if (use_inner)
+                  {
+                    inner_sz -= iv_elem(inner, r);
+                    avail -= inner_sz;
+                  }
+                if (avail == 0)
+                  break;
+                if (c > avail)
+                  c = avail;
+                size -= c;
+              }
+            iv_elem(p, r) = c;
+          }
       for (j = r; j < itr->length; j++)
         iv_elem(p, j) = 0;
       itr->length = r;

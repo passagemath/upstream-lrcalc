@@ -17,7 +17,7 @@
 
 
 ivlincomb *schur_mult(ivector *sh1, ivector *sh2,
-		      int rows, int cols, int partsz)
+                      int rows, int cols, int partsz)
 {
   skew_shape ss;
   ivlincomb *lc;

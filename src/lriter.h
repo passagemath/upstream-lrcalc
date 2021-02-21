@@ -25,7 +25,7 @@ typedef struct {
 
 
 lrtab_iter *lrit_new(ivector *outer, ivector *inner, ivector *content,
-			 int maxrows, int maxcols, int partsz);
+                         int maxrows, int maxcols, int partsz);
 
 INLINE void lrit_free(lrtab_iter *lrit)
 {
@@ -55,25 +55,25 @@ INLINE void lrit_next(lrtab_iter *lrit)
     {
       max = array[box->right].value;
       if (max > box->max)
-	max = box->max;
+        max = box->max;
       x = box->value;
       iv_elem(cont, x)--;
       x++;
       while (x <= max && iv_elem(cont,x) == iv_elem(cont,x-1))
-	x++;
+        x++;
       if (x > max)
-	continue;
+        continue;
 
       /* Refill tableau with minimal values. */
       box->value = x;
       iv_elem(cont, x)++;
       while (box != array)
-	{
-	  box--;
-	  x = array[box->above].value + 1;
-	  box->value = x;
-	  iv_elem(cont, x)++;
-	}
+        {
+          box--;
+          x = array[box->above].value + 1;
+          box->value = x;
+          iv_elem(cont, x)++;
+        }
       return;
     }
   lrit->size = -1;
@@ -89,15 +89,15 @@ INLINE ivlincomb *lrit_count(lrtab_iter *lrit)
   for (; lrit_good(lrit); lrit_next(lrit))
     if (ivlc_add_element(lc, 1, cont, iv_hash(cont), LC_COPY_KEY) != 0)
       {
-	ivlc_free_all(lc);
-	return NULL;
+        ivlc_free_all(lc);
+        return NULL;
       }
   return lc;
 }
 
 
 ivlincomb *lrit_expand(ivector *outer, ivector *inner, ivector *content,
-		       int maxrows, int maxcols, int partsz);
+                       int maxrows, int maxcols, int partsz);
 
 
 long long lrit_lrcoef(ivector *outer, ivector *inner, ivector *content);

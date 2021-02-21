@@ -24,7 +24,7 @@ ivector *part_conj(ivector *p)
   while (np > 0)
     {
       for (jlim = iv_elem(p, np-1); j < jlim; j++)
-	iv_elem(conj, j) = np;
+        iv_elem(conj, j) = np;
       np--;
     }
   return conj;

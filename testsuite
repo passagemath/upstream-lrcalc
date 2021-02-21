@@ -10,9 +10,9 @@ check () {
         echo "failed:"
         echo "  Expected: $expected"
         echo "  Got: $result"
-	failed=1
+        failed=1
     else
-	echo "ok"
+        echo "ok"
     fi
 }
 
