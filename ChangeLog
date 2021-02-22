@@ -5,6 +5,15 @@ Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
 CHANGE LOG
 
 
+2.1:    The code for computing single LR coefficients has been reimplemented
+        and is more than twice as fast as in version 2.0.  Most of the speedup
+        is the result of an idea of Pierre-Emmanuel Chaput that allows skipping
+        branches during the search for LR tableaux, so big thanks to him!
+
+        This release also includes Python bindings to the most important
+        functions in the liblrcalc library.
+
+
 2.0:    Much code has been reimplemented, including the code responsible
         for counting LR tableaux.  As a result, some functions are faster
         than in earlier versions.  The "lrcalc mult" and "lrcalc skew"
