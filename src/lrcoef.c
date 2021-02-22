@@ -121,6 +121,7 @@ long long lrcoef_count(ivector *outer, ivector *inner, ivector *content)
   long long coef;
 
   claim(iv_sum(outer) == iv_sum(inner) + iv_sum(content));
+  claim(iv_sum(content) > 1);
 
   T = lrcoef_new_skewtab(outer, inner, part_length(content));
   if (T == NULL)
@@ -186,7 +187,6 @@ long long lrcoef_count(ivector *outer, ivector *inner, ivector *content)
         {
           coef++;
           pos--;
-          if (box < 0) break;
           box--;
           se_supply = box->se_supply;
           above = T[box->north].value;
