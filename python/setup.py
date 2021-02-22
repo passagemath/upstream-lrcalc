@@ -12,6 +12,6 @@ setup(name='lrcalc',
     license='GPL3',
     ext_modules = cythonize([
         Extension("lrcalc", ["lrcalc.pyx"],
-                  libraries=["lrcalc"])
-    ])
+                  libraries=["lrcalc"]),
+    ], language_level="3"),
 )

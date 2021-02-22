@@ -86,7 +86,7 @@ static lrcoef_box *lrcoef_new_skewtab(ivector *nu, ivector *la, int max_value)
 }
 
 #ifdef DEBUG
-static void dump_content(lrcoef_content *C, int n)
+void dump_content(lrcoef_content *C, int n)
 {
   int i;
   printf("cont:");
@@ -98,7 +98,7 @@ static void dump_content(lrcoef_content *C, int n)
   putchar('\n');
 }
 
-static void dump_skewtab(lrcoef_box *T, int n)
+void dump_skewtab(lrcoef_box *T, int n)
 {
   int i;
   printf("id: vl mx no es sp ss ws\n");
