@@ -23,7 +23,7 @@ static void _maple_print_term(int c, ivector *v, char *letter, int nz)
       if (nz && iv_elem(v, i) == 0)
         break;
       if (i > 0)
-	putchar(',');
+        putchar(',');
       printf("%d", iv_elem(v, i));
     }
   putchar(']');
@@ -36,7 +36,7 @@ void maple_print_lincomb(ivlincomb *ht, char *letter, int nz)
   for (ivlc_first(ht, &itr); ivlc_good(&itr); ivlc_next(&itr))
     {
       if (ivlc_value(&itr) == 0)
-	continue;
+        continue;
       _maple_print_term(ivlc_value(&itr), ivlc_key(&itr), letter, nz);
     }
   putchar('\n');
@@ -68,7 +68,7 @@ void maple_qprint_lincomb(ivlincomb *lc, int level, char *letter)
   for (ivlc_first(lc, &itr); ivlc_good(&itr); ivlc_next(&itr))
     {
       if (ivlc_value(&itr) == 0)
-	continue;
+        continue;
       _maple_qprint_term(ivlc_value(&itr), ivlc_key(&itr), level, letter);
     }
   putchar('\n');

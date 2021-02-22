@@ -4,20 +4,21 @@
  */
 
 #include "alloc.h"
+#include "ilist.h"
 #include "ivector.h"
+#include "ivlist.h"
 #include "ivlincomb.h"
-#include "lriter.h"
 #include "part.h"
 #include "optshape.h"
-#include "ivlist.h"
-#include "ilist.h"
+#include "lriter.h"
+#include "lrcoef.h"
 
 #define _SCHUR_C
 #include "schur.h"
 
 
 ivlincomb *schur_mult(ivector *sh1, ivector *sh2,
-		      int rows, int cols, int partsz)
+                      int rows, int cols, int partsz)
 {
   skew_shape ss;
   ivlincomb *lc;
@@ -329,7 +330,7 @@ long long schur_lrcoef(ivector *outer, ivector *inner1, ivector *inner2)
   if (ss.sign <= 1)
     coef = ss.sign;
   else
-    coef = lrit_lrcoef(ss.outer, ss.inner, ss.cont);
+    coef = lrcoef_count(ss.outer, ss.inner, ss.cont);
   sksh_dealloc(&ss);
   return coef;
 }

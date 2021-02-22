@@ -25,10 +25,10 @@ int PREFIX(_grow_table) (HASHTAB *ht, SIZE_T sz)
   for (index = 0; index < ht->table_sz; index++)
     for (i = oldtab[index]; i != 0; i = next)
       {
-	SIZE_T newidx = elts[i].hash % newsz;
-	next = elts[i].next;
-	elts[i].next = newtab[newidx];
-	newtab[newidx] = i;
+        SIZE_T newidx = elts[i].hash % newsz;
+        next = elts[i].next;
+        elts[i].next = newtab[newidx];
+        newtab[newidx] = i;
       }
 
   ht->table_sz = newsz;
@@ -107,14 +107,14 @@ void PREFIX(print_stat)(HASHTAB *ht)
     {
       i = ht->table[index];
       if (i == 0)
-	continue;
+        continue;
       used++;
       count = 0;
       while (i != 0)
-	{
-	  count++;
-	  i = ht->elts[i].next;
-	}
+        {
+          count++;
+          i = ht->elts[i].next;
+        }
       cmp += (count + 1) * count / 2;
       c = (count > range) ? range : count;
       stat[c-1] += count;

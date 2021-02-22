@@ -17,10 +17,10 @@ test_lrskew_LDADD = liblrcalc.la
 test_fusion_LDADD = liblrcalc.la
 
 lib_LTLIBRARIES = liblrcalc.la
-liblrcalc_la_SOURCES = alloc.c ilist.c ivector.c ivlincomb.c ivlist.c \
+liblrcalc_la_SOURCES = alloc.c ilist.c ivector.c ivlincomb.c ivlist.c lrcoef.c\
   lriter.c maple.c optshape.c part.c perm.c schublib.c schur.c vectarg.c
 
-liblrcalc_la_LDFLAGS = $(LIBLRCALC_LDFLAGS) -version-info 1:1:0
+liblrcalc_la_LDFLAGS = $(LIBLRCALC_LDFLAGS) -version-info 2:0:0
 
 lrcalcincludedir = $(includedir)/lrcalc
 lrcalcinclude_HEADERS = *.h

@@ -39,7 +39,7 @@ tos := proc(expr)
           expo := expo / 2;
         od;
 
-	res := base;
+        res := base;
         expo := expo - 1;
 
         # return  res * base ^ expo

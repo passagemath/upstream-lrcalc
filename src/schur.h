@@ -2,7 +2,7 @@
 #define _SCHUR_H
 
 ivlincomb *schur_mult(ivector *sh1, ivector *sh2,
-		      int rows, int cols, int partsz);
+                      int rows, int cols, int partsz);
 
 int fusion_reduce(ivector *la, int level, ivector *tmp);
 int fusion_reduce_lc(ivlincomb *lc, int level);

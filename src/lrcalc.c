@@ -73,14 +73,14 @@ void mult_main(int ac, char **av)
     switch (c)
       {
       case 'm':
-	opt_maple = 1;
-	break;
+        opt_maple = 1;
+        break;
       case 'r':
-	opt_rows = atoi(optarg);
-	break;
+        opt_rows = atoi(optarg);
+        break;
       case 'c':
-	opt_cols = atoi(optarg);
-	break;
+        opt_cols = atoi(optarg);
+        break;
       case 'q':
       case 'f':
         if (c == 'q')
@@ -96,7 +96,7 @@ void mult_main(int ac, char **av)
         break;
 
       default:
-	cmd_usage(&mult_usage);
+        cmd_usage(&mult_usage);
       }
 
   sh1 = get_vect_arg(ac, av);
@@ -158,10 +158,10 @@ void skew_main(int ac, char **av)
         opt_maple = 1;
         break;
       case 'r':
-	opt_rows = atoi(optarg);
-	break;
+        opt_rows = atoi(optarg);
+        break;
       default:
-	cmd_usage(&skew_usage);
+        cmd_usage(&skew_usage);
       }
 
   outer = get_vect_arg(ac, av);
@@ -210,10 +210,10 @@ void coprod_main(int ac, char **av)
     switch (c)
       {
       case 'a':
-	opt_all = 1;
-	break;
+        opt_all = 1;
+        break;
       default:
-	cmd_usage(&mult_usage);
+        cmd_usage(&mult_usage);
       }
 
   sh = get_vect_arg(ac, av);
@@ -277,7 +277,7 @@ void coef_main(int ac, char **av)
     switch (c)
       {
       default:
-	cmd_usage(&coef_usage);
+        cmd_usage(&coef_usage);
       }
 
   outer = get_vect_arg(ac, av);
@@ -326,10 +326,10 @@ void tab_main(int ac, char **av)
     switch (c)
       {
       case 'r':
-	opt_rows = atoi(optarg);
-	break;
+        opt_rows = atoi(optarg);
+        break;
       default:
-	cmd_usage(&tab_usage);
+        cmd_usage(&tab_usage);
       }
 
   outer = get_vect_arg(ac, av);

@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([lrcalc],[2.0.0],[asbuch at math rutgers edu])
+AC_INIT([lrcalc],[2.1],[asbuch at math rutgers edu])
 AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_MACRO_DIR([m4])

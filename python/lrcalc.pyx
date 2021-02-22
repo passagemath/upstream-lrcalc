@@ -45,20 +45,22 @@ cdef dict ivlc_dict_part(ivlincomb *lc):
     return res
 
 
-cdef tuple iv_quantum(ivector *v, int level):
+cdef tuple iv_quantum(ivector *v, int level, bint degrees):
     cdef int i, d, n
+    cdef tuple p
     d = part_qdegree(v, level)
     n = v.length
     while n > 0 and part_qentry(v, n-1, d, level) == 0:
         n -= 1
-    return tuple(part_qentry(v, i, d, level) for i in range(n))
+    p = tuple(part_qentry(v, i, d, level) for i in range(n))
+    return (p, d) if degrees else p
 
-cdef dict ivlc_dict_quantum(ivlincomb *lc, int level):
+cdef dict ivlc_dict_quantum(ivlincomb *lc, int level, bint degrees):
     cdef ivlc_iter itr
     res = dict()
     ivlc_first(lc, &itr)
     while ivlc_good(&itr):
-        res[iv_quantum(ivlc_key(&itr), level)] = ivlc_value(&itr)
+        res[iv_quantum(ivlc_key(&itr), level, degrees)] = ivlc_value(&itr)
         ivlc_next(&itr)
     return res
 
@@ -143,7 +145,7 @@ def mult_fusion(sh1, sh2, int rows, int level):
             iv_free(csh1)
 
 
-def mult_quantum(sh1, sh2, int rows, int cols):
+def mult_quantum(sh1, sh2, int rows, int cols, bint degrees=False):
     """Compute quantum product of Schubert classes on a Grassmannian."""
 
     cdef ivector *csh1 = NULL
@@ -155,7 +157,7 @@ def mult_quantum(sh1, sh2, int rows, int cols):
         cprd = schur_mult_fusion(csh1, csh2, rows, cols)
         if cprd is NULL:
             raise MemoryError()
-        return ivlc_dict_quantum(cprd, cols)
+        return ivlc_dict_quantum(cprd, cols, degrees)
     finally:
         if cprd is not NULL:
             ivlc_free_all(cprd)

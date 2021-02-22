@@ -19,7 +19,7 @@ void sksh_print(ivector *outer, ivector *inner, ivector *cont)
   if (len <= ilen)
     {
       while (len > 0 && iv_elem(inner, len-1) == iv_elem(outer, len-1))
-	len--;
+        len--;
       ilen = len;
     }
   r0 = 0;
@@ -31,9 +31,9 @@ void sksh_print(ivector *outer, ivector *inner, ivector *cont)
   for (r = 0; r < clen; r++)
     {
       for (c = ss_left; c < ss_right; c++)
-	putchar(' ');
+        putchar(' ');
       for (c = 0; c < iv_elem(cont, r); c++)
-	putchar('c');
+        putchar('c');
       putchar('\n');
     }
 
@@ -42,9 +42,9 @@ void sksh_print(ivector *outer, ivector *inner, ivector *cont)
       int innr = (r < ilen) ? iv_elem(inner, r) : 0;
       int outr = iv_elem(outer, r);
       for (c = 0; c < innr; c++)
-	putchar(' ');
+        putchar(' ');
       for (; c < outr; c++)
-	putchar('s');
+        putchar('s');
       putchar('\n');
     }
 }
@@ -93,8 +93,8 @@ int optim_mult(skew_shape *ss, ivector *sh1, ivector *sh2,
     {
       r = (len1 + len2 < maxrows) ? len2 : maxrows - len1;
       for (; r < len2; r++)
-	if (iv_elem(sh1, maxrows - r - 1) + iv_elem(sh2, r) > maxcols)
-	  return 0;
+        if (iv_elem(sh1, maxrows - r - 1) + iv_elem(sh2, r) > maxcols)
+          return 0;
     }
 
   /* Number of full rows and columns in shapes. */
@@ -159,7 +159,7 @@ int optim_mult(skew_shape *ss, ivector *sh1, ivector *sh2,
 /* Find optimal shape for fusion product. */
 
 int optim_fusion(skew_shape *ss, ivector *sh1, ivector *sh2,
-		 int rows, int level)
+                 int rows, int level)
 {
   ivector *nsh1, *nsh2;
   int d1, d2, s1, s2, d, s, sh1d, i;
@@ -294,7 +294,7 @@ _add_comp(partial_shape *ps, ivector *out0, ivector *inn0,
  */
 
 int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
-	       ivector *content, int maxrows)
+               ivector *content, int maxrows)
 {
   ivector *cont = NULL, *out = NULL, *inn = NULL;
   int row_bound, row_first, row_span, ilen, clen, slen, r, c, c1, c2,
@@ -322,13 +322,13 @@ int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
   if (row_bound <= ilen)
     {
       while (row_bound > 0 &&
-	     iv_elem(inner, row_bound-1) == iv_elem(outer, row_bound-1))
-	row_bound--;
+             iv_elem(inner, row_bound-1) == iv_elem(outer, row_bound-1))
+        row_bound--;
       ilen = row_bound;
     }
   row_first = 0;
   while (row_first < ilen &&
-	 iv_elem(inner, row_first) == iv_elem(outer, row_first))
+         iv_elem(inner, row_first) == iv_elem(outer, row_first))
     row_first++;
   row_span = row_bound - row_first;
 
@@ -376,7 +376,7 @@ int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
     {
       full_cols = iv_elem(cont, clen - 1);
       for (r = clen-1; r >= 0; r--)
-	iv_elem(cont, r) -= full_cols;
+        iv_elem(cont, r) -= full_cols;
       cont_size -= full_cols * clen;
     }
 
@@ -406,83 +406,83 @@ int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
       r1t = r0t;
       r1b = r0b;
       if (c1 == 0)
-	r0t = r0b = row_bound;
+        r0t = r0b = row_bound;
       while (r0b < row_bound && c1 <= iv_elem(outer, r0b))
-	r0b++;
+        r0b++;
       while (r0t < iv_length(inner) && c1 <= iv_elem(inner, r0t))
-	r0t++;
+        r0t++;
 
       /* No new component? */
       if (r0t < r1b && r0b - r1t < maxrows)
-	continue;
+        continue;
 
       /* Single column too high? */
       if (c1 == c2-1 && r1b - r1t > maxrows)
-	{
-	  iv_free(out);
-	  iv_free(inn);
-	  iv_free(cont);
-	  return 0;
-	}
+        {
+          iv_free(out);
+          iv_free(inn);
+          iv_free(cont);
+          return 0;
+        }
 
       /* Single column of full height? */
       if (c1 == c2-1 && r1b - r1t == maxrows)
-	{
-	  full_cols++;
-	  c2 = c1;
-	  r2t = r0t;
-	  r2b = r0b;
-	  continue;
-	}
+        {
+          full_cols++;
+          c2 = c1;
+          r2t = r0t;
+          r2b = r0b;
+          continue;
+        }
 
       /* Find size of component. */
       comp_size = 0;
       for (r = r2t; r < r1b; r++)
-	{
-	  int a, b;
-	  a = (r < iv_length(inner)) ? iv_elem(inner, r) : 0;
-	  if (a < c1)
-	    a = c1;
-	  b = iv_elem(outer, r);
-	  if (b > c2)
-	    b = c2;
-	  comp_size += (b - a);
-	}
+        {
+          int a, b;
+          a = (r < iv_length(inner)) ? iv_elem(inner, r) : 0;
+          if (a < c1)
+            a = c1;
+          b = iv_elem(outer, r);
+          if (b > c2)
+            b = c2;
+          comp_size += (b - a);
+        }
 
       if ((r1t == r2t || r1b == r2b) && 0 < cont_size && cont_size < comp_size)
-	{
-	  /* Add content as component. */
-	  r = 1;
-	  c = iv_elem(cont,0);
-	  while (r < clen && iv_elem(cont,r) == c)
-	    r++;
-	  _add_comp(&ps, cont,NULL, 0,0,clen, c,0,r);
-	}
+        {
+          /* Add content as component. */
+          r = 1;
+          c = iv_elem(cont,0);
+          while (r < clen && iv_elem(cont,r) == c)
+            r++;
+          _add_comp(&ps, cont,NULL, 0,0,clen, c,0,r);
+        }
 
       if (r1t == r2t && comp_size > cont_size)
-	{
-	  /* Component of larger partition shape. */
-	  clen = r1b - r1t;
-	  for (r = r1t; r < r2b; r++)
-	    iv_elem(cont, r - r1t) = c2 - c1;
-	  for (; r < r1b; r++)
-	    iv_elem(cont, r - r1t) = iv_elem(outer, r) - c1;
-	  cont_size = comp_size;
-	}
+        {
+          /* Component of larger partition shape. */
+          clen = r1b - r1t;
+          for (r = r1t; r < r2b; r++)
+            iv_elem(cont, r - r1t) = c2 - c1;
+          for (; r < r1b; r++)
+            iv_elem(cont, r - r1t) = iv_elem(outer, r) - c1;
+          cont_size = comp_size;
+        }
       else if (r1b == r2b && comp_size > cont_size)
-	{
-	  /* Component of larger anti-partition shape. */
-	  clen = r2b - r2t;
-	  for (r = r2b-1; r >= r1t; r--)
-	    iv_elem(cont, r2b-1-r) = c2 - c1;
-	  for (; r >= r2t; r--)
-	    iv_elem(cont, r2b-1-r) = c2 - iv_elem(inner, r);
-	  cont_size = comp_size;
-	}
+        {
+          /* Component of larger anti-partition shape. */
+          clen = r2b - r2t;
+          for (r = r2b-1; r >= r1t; r--)
+            iv_elem(cont, r2b-1-r) = c2 - c1;
+          for (; r >= r2t; r--)
+            iv_elem(cont, r2b-1-r) = c2 - iv_elem(inner, r);
+          cont_size = comp_size;
+        }
       else if (comp_size > 0)
-	{
-	  _add_comp(&ps, outer,inner, c1,r1t,r1b, c2,r2t,r2b);
-	}
+        {
+          _add_comp(&ps, outer,inner, c1,r1t,r1b, c2,r2t,r2b);
+        }
 
       c2 = c1;
       r2t = r0t;
@@ -492,9 +492,9 @@ int optim_skew(skew_shape *ss, ivector *outer, ivector *inner,
   if (full_cols)
     {
       for (r = 0; r < clen; r++)
-	iv_elem(cont, r) += full_cols;
+        iv_elem(cont, r) += full_cols;
       for (; r < maxrows; r++)
-	iv_elem(cont, r) = full_cols;
+        iv_elem(cont, r) = full_cols;
       clen = maxrows;
     }
   iv_length(cont) = clen;
@@ -609,298 +609,298 @@ int optim_coef(skew_shape *ss, ivector *out, ivector *sh1, ivector *sh2)
       lar1 = 0;
       nur1 = 0;
       for (r = N-1; r >= 0; r--)
-	{
-	  lar = iv_elem(la, r);
-	  nur = iv_elem(nu, r);
-	  if (lar > nur1 || nur - lar1 > mu0)
-	    break;
-	  lar1 = lar;
-	  nur1 = nur;
-	}
+        {
+          lar = iv_elem(la, r);
+          nur = iv_elem(nu, r);
+          if (lar > nur1 || nur - lar1 > mu0)
+            break;
+          lar1 = lar;
+          nur1 = nur;
+        }
       c = 0;
       for (; r >= 0; r--)
-	{
-	  lar = iv_elem(la, r);
-	  nur = iv_elem(nu, r);
-	  if (nur - lar > mu0)
-	    goto coef_zero;
-	  ca = nur - lar1 - mu0;
-	  if (ca < lar - nur1)
-	    ca = lar - nur1;
-	  if (ca > 0)
-	    c += ca;
-	  if (nur - c < iv_elem(mu,r))
-	    goto coef_zero;
-	  if (nur == c)
-	    {
-	      N = r;
-	      break;
-	    }
-	  iv_elem(la,r) = lar - c;
-	  iv_elem(nu,r) = nur - c;
-	  lar1 = lar;
-	  nur1 = nur;
-	}
+        {
+          lar = iv_elem(la, r);
+          nur = iv_elem(nu, r);
+          if (nur - lar > mu0)
+            goto coef_zero;
+          ca = nur - lar1 - mu0;
+          if (ca < lar - nur1)
+            ca = lar - nur1;
+          if (ca > 0)
+            c += ca;
+          if (nur - c < iv_elem(mu,r))
+            goto coef_zero;
+          if (nur == c)
+            {
+              N = r;
+              break;
+            }
+          iv_elem(la,r) = lar - c;
+          iv_elem(nu,r) = nur - c;
+          lar1 = lar;
+          nur1 = nur;
+        }
 
       /* Remove row of size mu[0] from nu/la. */
       r = 0;
       while (r < N && iv_elem(nu,r) - iv_elem(la,r) < mu0)
-	r ++;
+        r ++;
       if (r < N)
-	{
-	  if (iv_elem(nu,r) - iv_elem(la,r) > mu0)
-	    goto coef_zero;
-	  for (; r < N-1; r++)
-	    {
-	      iv_elem(la,r) = iv_elem(la,r+1);
-	      iv_elem(nu,r) = iv_elem(nu,r+1);
-	    }
-	  for (r = 0; r < N-1; r++)
-	    iv_elem(mu,r) = iv_elem(mu,r+1);
-	  N -= 1;
-	}
+        {
+          if (iv_elem(nu,r) - iv_elem(la,r) > mu0)
+            goto coef_zero;
+          for (; r < N-1; r++)
+            {
+              iv_elem(la,r) = iv_elem(la,r+1);
+              iv_elem(nu,r) = iv_elem(nu,r+1);
+            }
+          for (r = 0; r < N-1; r++)
+            iv_elem(mu,r) = iv_elem(mu,r+1);
+          N -= 1;
+        }
 
       /* Horizontal compactification of nu/mu. */
       la0 = iv_elem(la, 0);
       mur1 = 0;
       nur1 = 0;
       for (r = N-1; r >= 0; r--)
-	{
-	  mur = iv_elem(mu, r);
-	  nur = iv_elem(nu, r);
-	  if (mur > nur1 || nur - mur1 > la0)
-	    break;
-	  mur1 = mur;
-	  nur1 = nur;
-	}
+        {
+          mur = iv_elem(mu, r);
+          nur = iv_elem(nu, r);
+          if (mur > nur1 || nur - mur1 > la0)
+            break;
+          mur1 = mur;
+          nur1 = nur;
+        }
       c = 0;
       for (; r >= 0; r--)
-	{
-	  mur = iv_elem(mu, r);
-	  nur = iv_elem(nu, r);
-	  if (nur - mur > la0)
-	    goto coef_zero;
-	  ca = nur - mur1 - la0;
-	  if (ca < mur - nur1)
-	    ca = mur - nur1;
-	  if (ca > 0)
-	    c += ca;
-	  if (nur - c < iv_elem(la,r))
-	    goto coef_zero;
-	  if (nur == c)
-	    {
-	      N = r;
-	      break;
-	    }
-	  iv_elem(mu,r) = mur - c;
-	  iv_elem(nu,r) = nur - c;
-	  mur1 = mur;
-	  nur1 = nur;
-	}
+        {
+          mur = iv_elem(mu, r);
+          nur = iv_elem(nu, r);
+          if (nur - mur > la0)
+            goto coef_zero;
+          ca = nur - mur1 - la0;
+          if (ca < mur - nur1)
+            ca = mur - nur1;
+          if (ca > 0)
+            c += ca;
+          if (nur - c < iv_elem(la,r))
+            goto coef_zero;
+          if (nur == c)
+            {
+              N = r;
+              break;
+            }
+          iv_elem(mu,r) = mur - c;
+          iv_elem(nu,r) = nur - c;
+          mur1 = mur;
+          nur1 = nur;
+        }
 
       /* Remove row of size la[0] from nu/la. */
       r = 0;
       while (r < N && iv_elem(nu,r) - iv_elem(mu,r) < la0)
-	r ++;
+        r ++;
       if (r < N)
-	{
-	  if (iv_elem(nu,r) - iv_elem(mu,r) > la0)
-	    goto coef_zero;
-	  for (; r < N-1; r++)
-	    {
-	      iv_elem(mu,r) = iv_elem(mu,r+1);
-	      iv_elem(nu,r) = iv_elem(nu,r+1);
-	    }
-	  for (r = 0; r < N-1; r++)
-	    iv_elem(la,r) = iv_elem(la,r+1);
-	  N -= 1;
-	}
+        {
+          if (iv_elem(nu,r) - iv_elem(mu,r) > la0)
+            goto coef_zero;
+          for (; r < N-1; r++)
+            {
+              iv_elem(mu,r) = iv_elem(mu,r+1);
+              iv_elem(nu,r) = iv_elem(nu,r+1);
+            }
+          for (r = 0; r < N-1; r++)
+            iv_elem(la,r) = iv_elem(la,r+1);
+          N -= 1;
+        }
 
       /* Vertical compactification of nu/la. */
       if (N < Nmu)
-	Nmu = N;
+        Nmu = N;
       while (Nmu > 0 && iv_elem(mu,Nmu-1) == 0)
-	Nmu--;
+        Nmu--;
       if (Nmu == 0)
-	goto coef_one;
+        goto coef_one;
       r = 0;
       while (r < Nmu && iv_elem(la,r) < iv_elem(nu,r))
-	r++;
+        r++;
       while (r < N && iv_elem(la,r) < iv_elem(nu,r) &&
-	     iv_elem(nu,r) < iv_elem(la,r-Nmu))
-	r++;
+             iv_elem(nu,r) < iv_elem(la,r-Nmu))
+        r++;
       if (r < N)
-	{
-	  Inu = r;
-	  s = (r > Nmu) ? (r - Nmu) : 0;
-	  Ila = s;
-	  for (; r < N && Inu < Nmu; r++)
-	    {
-	      if (iv_elem(la,r) == iv_elem(nu,r))
-		iv_elem(la,r) = -1;
-	      else
-		{
-		  iv_elem(nu,Inu) = iv_elem(nu,r);
-		  if (iv_elem(nu,Inu) < iv_elem(mu,Inu))
-		    goto coef_zero;
-		  Inu++;
-		}
-	    }
-	  while (r < N)
-	    {
-	      if (iv_elem(la,r) == iv_elem(nu,r))
-		{
-		  iv_elem(la,r) = -1;
-		  r++;
-		  continue;
-		}
-	      while (iv_elem(la,s) == -1)
-		s++;
-	      if (iv_elem(la,s) < iv_elem(nu,r))
-		goto coef_zero;
-	      if (iv_elem(la,s) > iv_elem(nu,r))
-		{
-		  iv_elem(la,Ila) = iv_elem(la,s);
-		  Ila++;
-		  iv_elem(nu,Inu) = iv_elem(nu,r);
-		  if (iv_elem(nu,Inu) < iv_elem(mu,Inu))
-		    goto coef_zero;
-		  Inu++;
-		}
-	      r++;
-	      s++;
-	    }
-	  while (s < N)
-	    {
-	      if (iv_elem(la,s) != -1)
-		{
-		  iv_elem(la,Ila) = iv_elem(la,s);
-		  Ila++;
-		}
-	      s += 1;
-	    }
-	  if (Inu < N && iv_elem(mu,Inu) > 0)
-	    goto coef_zero;
-	  N = Inu;
-	}
+        {
+          Inu = r;
+          s = (r > Nmu) ? (r - Nmu) : 0;
+          Ila = s;
+          for (; r < N && Inu < Nmu; r++)
+            {
+              if (iv_elem(la,r) == iv_elem(nu,r))
+                iv_elem(la,r) = -1;
+              else
+                {
+                  iv_elem(nu,Inu) = iv_elem(nu,r);
+                  if (iv_elem(nu,Inu) < iv_elem(mu,Inu))
+                    goto coef_zero;
+                  Inu++;
+                }
+            }
+          while (r < N)
+            {
+              if (iv_elem(la,r) == iv_elem(nu,r))
+                {
+                  iv_elem(la,r) = -1;
+                  r++;
+                  continue;
+                }
+              while (iv_elem(la,s) == -1)
+                s++;
+              if (iv_elem(la,s) < iv_elem(nu,r))
+                goto coef_zero;
+              if (iv_elem(la,s) > iv_elem(nu,r))
+                {
+                  iv_elem(la,Ila) = iv_elem(la,s);
+                  Ila++;
+                  iv_elem(nu,Inu) = iv_elem(nu,r);
+                  if (iv_elem(nu,Inu) < iv_elem(mu,Inu))
+                    goto coef_zero;
+                  Inu++;
+                }
+              r++;
+              s++;
+            }
+          while (s < N)
+            {
+              if (iv_elem(la,s) != -1)
+                {
+                  iv_elem(la,Ila) = iv_elem(la,s);
+                  Ila++;
+                }
+              s += 1;
+            }
+          if (Inu < N && iv_elem(mu,Inu) > 0)
+            goto coef_zero;
+          N = Inu;
+        }
 
       /* Remove column of size len(mu) from nu/la. */
       r = Nmu;
       while (r <= N && iv_elem(nu,r-1) <= iv_elem(la,r-Nmu))
-	r++;
+        r++;
       if (r <= N)
-	{
-	  if (r > Nmu && iv_elem(nu,r-1) > iv_elem(la,r-Nmu-1))
-	    return 0;
-	  if (r < N && iv_elem(nu,r) > iv_elem(la,r-Nmu))
-	    return 0;
-	  for (s = r-Nmu-1; s >= 0; s--)
-	    iv_elem(la,s)--;
-	  for (s = Nmu-1; s >= 0; s--)
-	    iv_elem(mu,s)--;
-	  for (s = 0; s < r; s++)
-	    {
-	      iv_elem(nu,s)--;
-	      if (iv_elem(nu,s) == 0)
-		{
-		  N = s;
-		  break;
-		}
-	    }
-	}
+        {
+          if (r > Nmu && iv_elem(nu,r-1) > iv_elem(la,r-Nmu-1))
+            return 0;
+          if (r < N && iv_elem(nu,r) > iv_elem(la,r-Nmu))
+            return 0;
+          for (s = r-Nmu-1; s >= 0; s--)
+            iv_elem(la,s)--;
+          for (s = Nmu-1; s >= 0; s--)
+            iv_elem(mu,s)--;
+          for (s = 0; s < r; s++)
+            {
+              iv_elem(nu,s)--;
+              if (iv_elem(nu,s) == 0)
+                {
+                  N = s;
+                  break;
+                }
+            }
+        }
 
       /* Vertical compactification of nu/mu. */
       if (N < Nla)
-	Nla = N;
+        Nla = N;
       while (Nla > 0 && iv_elem(la,Nla-1) == 0)
-	Nla--;
+        Nla--;
       if (Nla == 0)
-	goto coef_one;
+        goto coef_one;
       r = 0;
       while (r < Nla && iv_elem(mu,r) < iv_elem(nu,r))
-	r++;
+        r++;
       while (r < N && iv_elem(mu,r) < iv_elem(nu,r) &&
-	     iv_elem(nu,r) < iv_elem(mu,r-Nla))
-	r++;
+             iv_elem(nu,r) < iv_elem(mu,r-Nla))
+        r++;
       if (r < N)
-	{
-	  Inu = r;
-	  s = (r > Nla) ? (r - Nla) : 0;
-	  Imu = s;
-	  for (; r < N && Inu < Nla; r++)
-	    {
-	      if (iv_elem(mu,r) == iv_elem(nu,r))
-		iv_elem(mu,r) = -1;
-	      else
-		{
-		  iv_elem(nu,Inu) = iv_elem(nu,r);
-		  if (iv_elem(nu,Inu) < iv_elem(la,Inu))
-		    goto coef_zero;
-		  Inu++;
-		}
-	    }
-	  while (r < N)
-	    {
-	      if (iv_elem(mu,r) == iv_elem(nu,r))
-		{
-		  iv_elem(mu,r) = -1;
-		  r++;
-		  continue;
-		}
-	      while (iv_elem(mu,s) == -1)
-		s++;
-	      if (iv_elem(mu,s) < iv_elem(nu,r))
-		goto coef_zero;
-	      if (iv_elem(mu,s) > iv_elem(nu,r))
-		{
-		  iv_elem(mu,Imu) = iv_elem(mu,s);
-		  Imu++;
-		  iv_elem(nu,Inu) = iv_elem(nu,r);
-		  if (iv_elem(nu,Inu) < iv_elem(la,Inu))
-		    goto coef_zero;
-		  Inu++;
-		}
-	      r++;
-	      s++;
-	    }
-	  while (s < N)
-	    {
-	      if (iv_elem(mu,s) != -1)
-		{
-		  iv_elem(mu,Imu) = iv_elem(mu,s);
-		  Imu++;
-		}
-	      s += 1;
-	    }
-	  if (Inu < N && iv_elem(la,Inu) > 0)
-	    goto coef_zero;
-	  N = Inu;
-	}
+        {
+          Inu = r;
+          s = (r > Nla) ? (r - Nla) : 0;
+          Imu = s;
+          for (; r < N && Inu < Nla; r++)
+            {
+              if (iv_elem(mu,r) == iv_elem(nu,r))
+                iv_elem(mu,r) = -1;
+              else
+                {
+                  iv_elem(nu,Inu) = iv_elem(nu,r);
+                  if (iv_elem(nu,Inu) < iv_elem(la,Inu))
+                    goto coef_zero;
+                  Inu++;
+                }
+            }
+          while (r < N)
+            {
+              if (iv_elem(mu,r) == iv_elem(nu,r))
+                {
+                  iv_elem(mu,r) = -1;
+                  r++;
+                  continue;
+                }
+              while (iv_elem(mu,s) == -1)
+                s++;
+              if (iv_elem(mu,s) < iv_elem(nu,r))
+                goto coef_zero;
+              if (iv_elem(mu,s) > iv_elem(nu,r))
+                {
+                  iv_elem(mu,Imu) = iv_elem(mu,s);
+                  Imu++;
+                  iv_elem(nu,Inu) = iv_elem(nu,r);
+                  if (iv_elem(nu,Inu) < iv_elem(la,Inu))
+                    goto coef_zero;
+                  Inu++;
+                }
+              r++;
+              s++;
+            }
+          while (s < N)
+            {
+              if (iv_elem(mu,s) != -1)
+                {
+                  iv_elem(mu,Imu) = iv_elem(mu,s);
+                  Imu++;
+                }
+              s += 1;
+            }
+          if (Inu < N && iv_elem(la,Inu) > 0)
+            goto coef_zero;
+          N = Inu;
+        }
 
       /* Remove column of size len(la) from nu/mu. */
       r = Nla;
       while (r <= N && iv_elem(nu,r-1) <= iv_elem(mu,r-Nla))
-	r++;
+        r++;
       if (r <= N)
-	{
-	  if (r > Nla && iv_elem(nu,r-1) > iv_elem(mu,r-Nla-1))
-	    return 0;
-	  if (r < N && iv_elem(nu,r) > iv_elem(mu,r-Nla))
-	    return 0;
-	  for (s = r-Nla-1; s >= 0; s--)
-	    iv_elem(mu,s)--;
-	  for (s = Nla-1; s >= 0; s--)
-	    iv_elem(la,s)--;
-	  for (s = 0; s < r; s++)
-	    {
-	      iv_elem(nu,s)--;
-	      if (iv_elem(nu,s) == 0)
-		{
-		  N = s;
-		  break;
-		}
-	    }
-	}
+        {
+          if (r > Nla && iv_elem(nu,r-1) > iv_elem(mu,r-Nla-1))
+            return 0;
+          if (r < N && iv_elem(nu,r) > iv_elem(mu,r-Nla))
+            return 0;
+          for (s = r-Nla-1; s >= 0; s--)
+            iv_elem(mu,s)--;
+          for (s = Nla-1; s >= 0; s--)
+            iv_elem(la,s)--;
+          for (s = 0; s < r; s++)
+            {
+              iv_elem(nu,s)--;
+              if (iv_elem(nu,s) == 0)
+                {
+                  N = s;
+                  break;
+                }
+            }
+        }
     }
 
   if (N == 0)

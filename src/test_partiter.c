@@ -50,11 +50,11 @@ int test_part_iter_box(int rows, int cols)
     {
       pitr_box_sz_first(&itr, p, rows, cols, size);
       for (; pitr_good(&itr); pitr_next(&itr))
-	{
-	  assert(part_valid(p));
-	  assert(iv_sum(p) == size);
-	  np1++;
-	}
+        {
+          assert(part_valid(p));
+          assert(iv_sum(p) == size);
+          np1++;
+        }
     }
   assert(np1 == np);
   iv_free(p);
@@ -83,8 +83,8 @@ int test_part_iter_sub(int rows, int cols, ivector *outer)
   for (; pitr_good(&itr); pitr_next(&itr))
     if (part_leq(p, outer))
       {
-	int sz = iv_sum(p);
-	iv_elem(count, sz)++;
+        int sz = iv_sum(p);
+        iv_elem(count, sz)++;
       }
 
   np = 0;
@@ -101,14 +101,14 @@ int test_part_iter_sub(int rows, int cols, ivector *outer)
     {
       np = 0;
       pitr_first(&itr, p, rows, cols, outer, NULL,
-		size, PITR_USE_OUTER | PITR_USE_SIZE);
+                size, PITR_USE_OUTER | PITR_USE_SIZE);
       for (; pitr_good(&itr); pitr_next(&itr))
-	{
-	  assert(part_valid(p));
-	  assert(part_leq(p, outer));
-	  assert(iv_sum(p) == size);
-	  np++;
-	}
+        {
+          assert(part_valid(p));
+          assert(part_leq(p, outer));
+          assert(iv_sum(p) == size);
+          np++;
+        }
       assert(np == iv_elem(count, size));
     }
 
@@ -139,8 +139,8 @@ int test_part_iter_super(int rows, int cols, ivector *inner)
   for (; pitr_good(&itr); pitr_next(&itr))
     if (part_leq(inner, p))
       {
-	int sz = iv_sum(p);
-	iv_elem(count, sz)++;
+        int sz = iv_sum(p);
+        iv_elem(count, sz)++;
       }
 
   np = 0;
@@ -157,14 +157,14 @@ int test_part_iter_super(int rows, int cols, ivector *inner)
     {
       np = 0;
       pitr_first(&itr, p, rows, cols, NULL, inner,
-		size, PITR_USE_INNER | PITR_USE_SIZE);
+                size, PITR_USE_INNER | PITR_USE_SIZE);
       for (; pitr_good(&itr); pitr_next(&itr))
-	{
-	  assert(part_valid(p));
-	  assert(part_leq(inner, p));
-	  assert(iv_sum(p) == size);
-	  np++;
-	}
+        {
+          assert(part_valid(p));
+          assert(part_leq(inner, p));
+          assert(iv_sum(p) == size);
+          np++;
+        }
       assert(np == iv_elem(count, size));
     }
 
@@ -196,13 +196,13 @@ int test_part_iter_between(int rows, int cols,
   for (; pitr_good(&itr); pitr_next(&itr))
     if (part_leq(inner, p) && part_leq(p, outer))
       {
-	int sz = iv_sum(p);
-	iv_elem(count, sz)++;
+        int sz = iv_sum(p);
+        iv_elem(count, sz)++;
       }
 
   np = 0;
   pitr_first(&itr, p, rows, cols, outer, inner, 0,
-	    PITR_USE_OUTER | PITR_USE_INNER);
+            PITR_USE_OUTER | PITR_USE_INNER);
   for (; pitr_good(&itr); pitr_next(&itr))
     {
       assert(part_valid(p));
@@ -216,15 +216,15 @@ int test_part_iter_between(int rows, int cols,
     {
       np = 0;
       pitr_first(&itr, p, rows, cols, outer, inner, size,
-		PITR_USE_OUTER | PITR_USE_INNER | PITR_USE_SIZE);
+                PITR_USE_OUTER | PITR_USE_INNER | PITR_USE_SIZE);
       for (; pitr_good(&itr); pitr_next(&itr))
-	{
-	  assert(part_valid(p));
-	  assert(part_leq(inner, p));
-	  assert(part_leq(p, outer));
-	  assert(iv_sum(p) == size);
-	  np++;
-	}
+        {
+          assert(part_valid(p));
+          assert(part_leq(inner, p));
+          assert(part_leq(p, outer));
+          assert(iv_sum(p) == size);
+          np++;
+        }
       assert(np == iv_elem(count, size));
     }
 
@@ -278,17 +278,17 @@ int main(int ac, char **av)
 
       pitr_first(&itr_p1, p1, rows, cols, p2, NULL, 0, PITR_USE_OUTER);
       for (; pitr_good(&itr_p1); pitr_next(&itr_p1))
-	{
-	  int p1_len = iv_length(p1);
-	  part_unchop(p1, rows);
+        {
+          int p1_len = iv_length(p1);
+          part_unchop(p1, rows);
 
-	  if (test_part_iter_between(rows, cols, p2, p1)) goto out_of_mem;
-	  if (test_part_iter_between(rows0, cols, p2, p1)) goto out_of_mem;
+          if (test_part_iter_between(rows, cols, p2, p1)) goto out_of_mem;
+          if (test_part_iter_between(rows0, cols, p2, p1)) goto out_of_mem;
           if (test_part_iter_between(rows, cols0, p2, p1)) goto out_of_mem;
           if (test_part_iter_between(rows, cols+2, p2, p1)) goto out_of_mem;
 
-	  iv_length(p1) = p1_len;
-	}
+          iv_length(p1) = p1_len;
+        }
       iv_length(p2) = p2_len;
     }
   iv_free(p1);

@@ -31,10 +31,10 @@ ivlist *all_strings(ivector *dimvec)
   for (i = 0; i < ld; i++)
     {
       while (j < iv_elem(dimvec, i))
-	{
-	  iv_elem(str, j) = i;
-	  j++;
-	}
+        {
+          iv_elem(str, j) = i;
+          j++;
+        }
     }
 
   res = ivl_new(200);
@@ -60,7 +60,7 @@ ivlist *all_strings(ivector *dimvec)
       iv_elem(cntvec, iv_elem(str, j))++;
       while (j > 0 && iv_elem(str, j-1) >= iv_elem(str, j))
         {
-	  j--;
+          j--;
           iv_elem(cntvec, iv_elem(str, j))++;
         }
       if (j == 0)
@@ -77,10 +77,10 @@ ivlist *all_strings(ivector *dimvec)
       for (i = 0; i < ld; i++)
         {
           for (k = 0; k < iv_elem(cntvec, i); k++)
-	    {
-	      iv_elem(str, j) = i;
-	      j++;
-	    }
+            {
+              iv_elem(str, j) = i;
+              j++;
+            }
           iv_elem(cntvec, i) = 0;
         }
     }
