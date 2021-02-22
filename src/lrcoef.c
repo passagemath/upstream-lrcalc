@@ -1,19 +1,20 @@
 #include "ivector.h"
 #include "part.h"
+#include "lrcoef.h"
 
 typedef struct {
   int value;      /* integer in box of skew tableau */
   int max;        /* upper bound for integer in box */
   int north;      /* index of box above */
-  int east;      /* index of box to the right */
+  int east;       /* index of box to the right */
   int se_supply;  /* number of available integers larger than value */
   int se_sz;      /* number of boxes to the right and strictly below */
   int west_sz;    /* number of boxes strictly to the left in same row */
 } lrcoef_box;
 
 typedef struct {
-  int cont;     /* number of boxes containing a given integer */
-  int supply;   /* total supply of given integer */
+  int cont;       /* number of boxes containing a given integer */
+  int supply;     /* total supply of given integer */
 } lrcoef_content;
 
 static lrcoef_content *lrcoef_new_content(ivector *mu)
@@ -38,7 +39,7 @@ static lrcoef_content *lrcoef_new_content(ivector *mu)
 static lrcoef_box *lrcoef_new_skewtab(ivector *nu, ivector *la, int max_value)
 {
   lrcoef_box *array;
-  int N, pos, r, c, box_max, box_se_sz;
+  int N, pos, r, c;
 
   claim(part_valid(nu));
   claim(part_valid(la));
@@ -54,15 +55,15 @@ static lrcoef_box *lrcoef_new_skewtab(ivector *nu, ivector *la, int max_value)
   for (r = iv_length(nu) - 1; r >= 0; r--)
     {
       int nu_0 = (r == 0) ? iv_elem(nu, 0) : iv_elem(nu, r-1);
-      int la_0 = (r == 0) ? iv_elem(nu, 0) : iv_elem(la, r-1);
+      int la_0 = (r == 0) ? iv_elem(nu, 0) : part_entry(la, r-1);
       int nu_r = iv_elem(nu, r);
       int la_r = part_entry(la, r);
       int nu_1 = part_entry(nu, r+1);
       for (c = la_r; c < nu_r; c++)
         {
           lrcoef_box *box = array + --pos;
+          box->north = (la_0 <= c && c < nu_0) ? pos - nu_r + la_0 : N;
           box->east = (c + 1 < nu_r) ? pos - 1 : N + 1;
-          box->north = (la_0 <= c && c < nu_0) ? pos - nu_r + la_0 : N + 1;
           box->west_sz = c - la_r;
           if (c >= nu_1)
             {
@@ -77,8 +78,38 @@ static lrcoef_box *lrcoef_new_skewtab(ivector *nu, ivector *la, int max_value)
             }
         }
     }
+  array[N].value = 0;
+  array[N+1].value = max_value;
+  array[N+1].se_supply = 0;
   return array;
 }
+
+#ifdef DEBUG
+static void dump_content(lrcoef_content *C, int n)
+{
+  int i;
+  printf("cont:");
+  for (i = 0; i < n; i++)
+    printf(" %d", C[i].cont);
+  printf("  supply:");
+  for (i = 0; i < n; i++)
+    printf(" %d", C[i].supply);
+  putchar('\n');
+}
+
+static void dump_skewtab(lrcoef_box *T, int n)
+{
+  int i;
+  printf("id: vl mx no es sp ss ws\n");
+  for (i = 0; i < n; i++)
+    {
+      lrcoef_box *b = T + i;
+      printf("%2d: %2d %2d %2d %2d %2d %2d %2d\n",
+             i, b->value, b->max, b->north, b->east,
+             b->se_supply, b->se_sz, b->west_sz);
+    }
+}
+#endif
 
 /* This is a low level function called from schur_lrcoef(). */
 long long lrcoef_count(ivector *outer, ivector *inner, ivector *content)

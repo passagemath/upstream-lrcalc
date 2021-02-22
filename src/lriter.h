@@ -100,7 +100,4 @@ ivlincomb *lrit_expand(ivector *outer, ivector *inner, ivector *content,
                        int maxrows, int maxcols, int partsz);
 
 
-long long lrit_lrcoef(ivector *outer, ivector *inner, ivector *content);
-
-
 #endif
