@@ -1,0 +1,3 @@
+include README.rst LICENSE COPYING pyproject.toml setup.py
+include *.pxd *.pyx *.py
+exclude lrcalc.c

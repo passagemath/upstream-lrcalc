@@ -1,3 +1,7 @@
+#   Littlewood-Richardson Calculator
+#   Copyright (C) 1999- Anders S. Buch (asbuch at math rutgers edu)
+#   See the file LICENSE for license information.
+
 from libc.stdint cimport uint32_t, int32_t
 
 cdef extern from "lrcalc/ivector.h":
