@@ -6,3 +6,4 @@ libtool
 stamp-h1
 lrcalc.maple
 testsuite.trs
+dist/
