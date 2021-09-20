@@ -42,11 +42,11 @@ USAGE
 We give a very brief description of the programs.
 
 The program `lrcalc` can perform various operations on symmetric functions, and
-its first argument must specify the operation to be used.  There are five of
+its first argument must specify the operation to be used. There are five of
 these operations:
 
 
-### `lrcalc coef`
+## `lrcalc coef`
 
 *Compute a single Littlewood-Richardson coefficient.*
 
@@ -56,11 +56,11 @@ product s_x * s_y.
 
 ### Example:
 
-    % lrcalc coef 3 2 1 - 2 1 - 2 1
+    lrcalc coef 3 2 1 - 2 1 - 2 1
     2
 
 
-### `lrcalc skew`
+## `lrcalc skew`
 
 *Expand a skew Schur function in the basis of Schur functions.*
 
@@ -70,13 +70,13 @@ in front.
 
 ### Example:
 
-    % lrcalc skew 3 2 1 / 2 1
+    lrcalc skew 3 2 1 / 2 1
     2  (2,1)
     1  (1,1,1)
     1  (3)
 
 
-### `lrcalc mult`
+## `lrcalc mult`
 
 *Expand a product of two Schur functions in the basis of Schur functions.*
 
@@ -86,7 +86,7 @@ in front.
 
 ### Example:
 
-    % lrcalc mult 2 1 - 2 1
+    lrcalc mult 2 1 - 2 1
     2  (3,2,1)
     1  (4,2)
     1  (3,1,1,1)
@@ -105,16 +105,16 @@ the same product is computed, but the output is given in fusion ring notation.
 
 ### Example:
 
-    % lrcalc mult -q 3,2 3 2 1 - 3 2 1
+    lrcalc mult -q 3,2 3 2 1 - 3 2 1
     1  (2)
     1  (1,1)
 
-    % lrcalc mult -f 3,2 3 2 1 - 3 2 1
+    lrcalc mult -f 3,2 3 2 1 - 3 2 1
     1  (4,4,4)
     1  (5,4,3)
 
 
-### `lrcalc coprod`
+## `lrcalc coprod`
 
 *Calculate coproducts in the ring of symmetric functions.*
 
@@ -124,7 +124,7 @@ coefficient in front.
 
 ### Example:
 
-    % lrcalc coprod 3 2 1
+    lrcalc coprod 3 2 1
     1  (2,1,1)  (1,1)
     1  (3,2,1)  ()
     1  (3,1,1)  (1)
@@ -140,19 +140,19 @@ coefficient in front.
     1  (3,1)  (1,1)
 
 
-### `schubmult`
+## `schubmult`
 
 *Expand a product of two Schubert polynomials in the basis of Schubert polynomials.*
 
 ### Example:
 
-    % schubmult 1 3 2 - 1 3 2
+    schubmult 1 3 2 - 1 3 2
     1  (2,3,1)
     1  (1,4,2,3)
 
 The option `-s` tells `schubmult` to use *string* notation:
 
-    % schubmult -s 0 1 0 2 1 - 1 0 1 0 2
+    schubmult -s 0 1 0 2 1 - 1 0 1 0 2
     1  (1,1,0,2,0)
     1  (1,2,0,0,1)
     1  (1,0,2,1,0)
@@ -199,7 +199,7 @@ The Maple interface defines three Maple functions, `tos`, `skew`, and `lrcoef`.
 
 ### Example:
 
-    % maple
+    maple
         |\^/|     Maple V Release 4 (WMI Campus Wide License)
     ._|\|   |/|_. Copyright (c) 1981-1996 by Waterloo Maple Inc. All rights
     \  MAPLE  /  reserved. Maple and Maple V are registered trademarks of
@@ -230,7 +230,6 @@ This package is distributed under the terms of the GNU General Public License
 License, or (at your option) any later version. See
 http://www.gnu.org/licenses/.
 
-<br>
 
 Enjoy!
 
