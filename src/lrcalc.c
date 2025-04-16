@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 extern int optind;
+extern char *optarg;
 
 #include "ivector.h"
 #include "vectarg.h"
@@ -309,12 +310,13 @@ void coef_main(int ac, char **av)
 
 usage_t tab_usage = {
  name: "tab",
- args: "[-r rows] outer / inner"
+ args: "[-r rows] outer / inner [- weight]"
 };
 
 void tab_main(int ac, char **av)
 {
-  ivector *outer, *inner;
+  ivector *outer, *inner, *weight;
+  int weight_len;
   int opt_rows = -1;
   int c;
   lrtab_iter *lrit;
@@ -338,16 +340,36 @@ void tab_main(int ac, char **av)
   inner = get_vect_arg(ac, av);
   if (inner == NULL || part_valid(inner) == 0)
     cmd_error(&tab_usage, "inner shape not a valid partition.");
+  weight = get_vect_arg(ac, av);
+  if (weight != NULL)
+    {
+      if (! part_valid(weight))
+        cmd_error(&tab_usage, "weight not a valid partition.");
+      weight_len = part_length(weight);
+    }
 
   lrit = lrit_new(outer, inner, NULL, opt_rows, -1, -1);
   if (lrit == NULL)
     {
       iv_free(outer);
       iv_free(inner);
+      if (weight)
+        iv_free(weight);
       out_of_memory();
     }
   for (; lrit_good(lrit); lrit_next(lrit))
     {
+      if (weight)
+        {
+          int i;
+          if (weight_len != part_length(lrit->cont))
+            continue;
+          i = 0;
+          while (i < weight_len && iv_elem(lrit->cont, i) == iv_elem(weight, i))
+            i++;
+          if (i < weight_len)
+            continue;
+        }
       lrit_print_skewtab(lrit, outer, inner);
       printf("\n");
     }
@@ -356,6 +378,8 @@ void tab_main(int ac, char **av)
   lrit_free(lrit);
   iv_free(outer);
   iv_free(inner);
+  if (weight != NULL)
+    iv_free(weight);
 #endif
 }
 
